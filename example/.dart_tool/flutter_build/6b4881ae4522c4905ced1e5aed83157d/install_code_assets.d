@@ -1,0 +1,1 @@
+ /Users/victoriavernon/Downloads/mdsflutter-2.3.1\ (1)/example/.dart_tool/flutter_build/6b4881ae4522c4905ced1e5aed83157d/native_assets.json: 
