@@ -24,38 +24,77 @@ class _SensorViewState extends State<SensorView> {
           children: [
             const Icon(Icons.bluetooth, size: 48),
             const SizedBox(height: 20),
+
             TextField(
               controller: idController,
-              decoration: const InputDecoration(labelText: "ID:"),
+              decoration: const InputDecoration(
+                labelText: "Sensor ID",
+                border: OutlineInputBorder(),
+              ),
             ),
+
             const SizedBox(height: 20),
-            Text("Status: $status", style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                viewModel.connect((success) {
-                  setState(() => status = "forbundet");
-                });
-              },
-              child: const Text("Connect"),
+
+            Text(
+              "Status: $status",
+              style: const TextStyle(fontSize: 18),
             ),
-            ElevatedButton(
-              onPressed: () {
-                viewModel.scan((id) {
-                  idController.text = id;
-                  setState(() {});
-                });
-              },
-              child: const Text("Scan"),
-            ),
-            const Spacer(),
+
+            const SizedBox(height: 30),
+
+            //  CONNECT + SCAN knapper
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                Icon(Icons.signal_cellular_alt, size: 28),
-                Icon(Icons.menu, size: 28),
+              children: [
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.bluetooth_connected),
+                  label: const Text("Connect"),
+                  onPressed: () {
+                    viewModel.connect((success) {
+                      setState(() {
+                        status = success ? "forbundet" : "fejl";
+                      });
+                    });
+                  },
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.search),
+                  label: const Text("Scan"),
+                  onPressed: () {
+                    viewModel.scan((id) {
+                      setState(() {
+                        idController.text = id;
+                      });
+                    });
+                  },
+                ),
               ],
             ),
+
+            const Spacer(),
+
+            // Bund-ikoner (matcher din navigation)
+            Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    IconButton(
+      icon: const Icon(Icons.signal_cellular_alt, size: 28),
+      tooltip: 'Start Run',
+      onPressed: () {
+        Navigator.pushNamed(context, '/start-run');
+      },
+    ),
+    IconButton(
+      icon: const Icon(Icons.menu, size: 28),
+      tooltip: 'Historik',
+      onPressed: () {
+        Navigator.pushNamed(context, '/history');
+      },
+    ),
+  ],
+),
+
+
             const SizedBox(height: 20),
           ],
         ),
