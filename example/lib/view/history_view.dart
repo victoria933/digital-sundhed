@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../viewmodels/history_viewmodel.dart';
+import '../view_model/history_viewmodel.dart';
 
 class HistoryView extends StatelessWidget {
   final HistoryViewModel viewModel = HistoryViewModel();
@@ -10,17 +10,37 @@ class HistoryView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('Historik')),
-      body: ListView.builder(
-        itemCount: history.length,
-        itemBuilder: (context, index) {
-          final run = history[index];
-          return ListTile(
-            title: Text('${run.date.day}/${run.date.month}'),
-            subtitle: Text(
-              'Tid: ${run.duration.inMinutes} min – Distance: ${run.distance} km – Zone: ${run.zone}',
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              children: const [
+                Expanded(child: Text('Dato', style: TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(child: Text('Tid', style: TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(child: Text('Distance', style: TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(child: Text('Zone', style: TextStyle(fontWeight: FontWeight.bold))),
+              ],
             ),
-          );
-        },
+            Divider(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: history.length,
+                itemBuilder: (context, index) {
+                  final run = history[index];
+                  return Row(
+                    children: [
+                      Expanded(child: Text('${run.date.day}/${run.date.month}')),
+                      Expanded(child: Text('${run.duration.inMinutes} min')),
+                      Expanded(child: Text('${run.distance.toStringAsFixed(2)} km')),
+                      Expanded(child: Text('${run.zone} zone')),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
