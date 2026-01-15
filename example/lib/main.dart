@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mdsflutter_example/AppModel.dart';
-import 'package:provider/provider.dart';
-
-import 'ScanWidget.dart';
+import 'view/home_view.dart';
+import 'view/history_view.dart';
+// Tilføj flere views her efter behov
 
 void main() {
-  runApp(
-      ChangeNotifierProvider(
-        create: (context) => AppModel(),
-        child: MaterialApp(
-          home: ScanWidget(),
-        ),
-      )
-  );
+  runApp(ZoneLoebApp());
+}
+
+class ZoneLoebApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ZoneLøb',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeView(),
+        '/history': (context) => HistoryView(),
+        // Tilføj flere routes: '/start', '/sensor', '/details', '/scenario'
+      },
+    );
+  }
 }
