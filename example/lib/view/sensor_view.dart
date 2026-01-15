@@ -12,12 +12,10 @@ class _SensorViewState extends State<SensorView> {
   final SensorViewModel viewModel = SensorViewModel();
   final TextEditingController idController = TextEditingController();
 
-  void updateUI() => setState(() {});
+  String status = "ikke forbundet";
 
   @override
   Widget build(BuildContext context) {
-    final sensor = viewModel.state;
-
     return Scaffold(
       appBar: AppBar(title: const Text("Sensor")),
       body: Padding(
@@ -31,15 +29,12 @@ class _SensorViewState extends State<SensorView> {
               decoration: const InputDecoration(labelText: "ID:"),
             ),
             const SizedBox(height: 20),
-            Text(
-              "Status: ${sensor.isConnected ? "forbundet" : "ikke forbundet"}",
-              style: const TextStyle(fontSize: 18),
-            ),
+            Text("Status: $status", style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                viewModel.connect(idController.text, (success) {
-                  updateUI();
+                viewModel.connect((success) {
+                  setState(() => status = "forbundet");
                 });
               },
               child: const Text("Connect"),
@@ -48,7 +43,7 @@ class _SensorViewState extends State<SensorView> {
               onPressed: () {
                 viewModel.scan((id) {
                   idController.text = id;
-                  updateUI();
+                  setState(() {});
                 });
               },
               child: const Text("Scan"),
