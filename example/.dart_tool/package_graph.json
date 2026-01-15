@@ -80,7 +80,7 @@
       "version": "2.3.1",
       "dependencies": [
         "flutter",
-        "protobuf"
+        "flutter_reactive_ble"
       ]
     },
     {
@@ -104,7 +104,7 @@
     },
     {
       "name": "meta",
-      "version": "1.16.0",
+      "version": "1.17.0",
       "dependencies": []
     },
     {
@@ -166,7 +166,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.6",
+      "version": "0.7.7",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -273,15 +273,6 @@
       "version": "1.0.0",
       "dependencies": [
         "flutter"
-      ]
-    },
-    {
-      "name": "protobuf",
-      "version": "3.1.0",
-      "dependencies": [
-        "collection",
-        "fixnum",
-        "meta"
       ]
     },
     {
@@ -396,14 +387,63 @@
       ]
     },
     {
+      "name": "vm_service",
+      "version": "15.0.2",
+      "dependencies": []
+    },
+    {
+      "name": "flutter_reactive_ble",
+      "version": "5.4.0",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "functional_data",
+        "meta",
+        "reactive_ble_mobile",
+        "reactive_ble_platform_interface"
+      ]
+    },
+    {
+      "name": "reactive_ble_platform_interface",
+      "version": "5.4.0",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "functional_data",
+        "meta",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "reactive_ble_mobile",
+      "version": "5.4.0",
+      "dependencies": [
+        "flutter",
+        "protobuf",
+        "reactive_ble_platform_interface"
+      ]
+    },
+    {
+      "name": "protobuf",
+      "version": "2.1.0",
+      "dependencies": [
+        "collection",
+        "fixnum",
+        "meta"
+      ]
+    },
+    {
       "name": "fixnum",
       "version": "1.1.1",
       "dependencies": []
     },
     {
-      "name": "vm_service",
-      "version": "15.0.2",
-      "dependencies": []
+      "name": "functional_data",
+      "version": "1.2.0",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
     }
   ],
   "configVersion": 1

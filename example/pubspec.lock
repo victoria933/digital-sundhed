@@ -78,6 +78,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_reactive_ble:
+    dependency: transitive
+    description:
+      name: flutter_reactive_ble
+      sha256: "3ca8430bc7a6cabe5529aab4afaa2e3cb285941f7f7ab7472604074e347c1302"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -88,6 +96,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  functional_data:
+    dependency: transitive
+    description:
+      name: functional_data
+      sha256: "76d17dc707c40e552014f5a49c0afcc3f1e3f05e800cd6b7872940bfe41a5039"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -139,10 +155,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
+      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"
       url: "https://pub.dev"
     source: hosted
-    version: "1.16.0"
+    version: "1.17.0"
   nested:
     dependency: transitive
     description:
@@ -275,10 +291,10 @@ packages:
     dependency: transitive
     description:
       name: protobuf
-      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
+      sha256: "01dd9bd0fa02548bf2ceee13545d4a0ec6046459d847b6b061d8a27237108a08"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "2.1.0"
   provider:
     dependency: "direct main"
     description:
@@ -287,6 +303,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
+  reactive_ble_mobile:
+    dependency: transitive
+    description:
+      name: reactive_ble_mobile
+      sha256: "78af92cfb184770a277a8bdaa76b396a28dbada8931f3d8d0ff552414681f5db"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.0"
+  reactive_ble_platform_interface:
+    dependency: transitive
+    description:
+      name: reactive_ble_platform_interface
+      sha256: d0e6f86c7ee3865b74d8a7b6deb1fb8320b24176dfd9a3e475f84b7117eb42c7
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -336,10 +368,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "522f00f556e73044315fa4585ec3270f1808a4b186c936e612cab0b565ff1e00"
+      sha256: ab2726c1a94d3176a45960b6234466ec367179b87dd74f1611adb1f3b5fb9d55
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.6"
+    version: "0.7.7"
   vector_math:
     dependency: transitive
     description:

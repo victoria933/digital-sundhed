@@ -1,7 +1,9 @@
-class ZoneRange {
-  final int zone;
-  final int min;
-  final int max;
+class SensorState {
+  final String id;
+  final bool isConnected;
 
-  ZoneRange({required this.zone, required this.min, required this.max});
+  SensorState({
+    required this.id,
+    required this.isConnected,
+  });
 }

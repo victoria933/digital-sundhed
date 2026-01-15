@@ -1,50 +1,67 @@
 import 'package:flutter/material.dart';
 import '../view_model/sensor_view_model.dart';
-import 'feedback_view.dart';
 
 class SensorView extends StatefulWidget {
-  const SensorView({super.key, required this.selectedZone});
-
-  final int selectedZone;
+  const SensorView({super.key});
 
   @override
   State<SensorView> createState() => _SensorViewState();
 }
 
 class _SensorViewState extends State<SensorView> {
-  final zoneVM = ZoneViewModel();
+  final SensorViewModel viewModel = SensorViewModel();
+  final TextEditingController idController = TextEditingController();
 
-  // Simuleret sensorværdi (du erstatter med rigtig sensor)
-  int sensorValue = 0;
-
-  void onSensorValue(int value) {
-    int scenario = zoneVM.evaluateSensor(widget.selectedZone, value);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FeedbackView(scenario: scenario),
-      ),
-    );
-  }
+  void updateUI() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
+    final sensor = viewModel.state;
+
     return Scaffold(
       appBar: AppBar(title: const Text("Sensor")),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Sensorværdi: $sensorValue"),
+            const Icon(Icons.bluetooth, size: 48),
+            const SizedBox(height: 20),
+            TextField(
+              controller: idController,
+              decoration: const InputDecoration(labelText: "ID:"),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Status: ${sensor.isConnected ? "forbundet" : "ikke forbundet"}",
+              style: const TextStyle(fontSize: 18),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                sensorValue = 75; // testværdi
-                onSensorValue(sensorValue);
+                viewModel.connect(idController.text, (success) {
+                  updateUI();
+                });
               },
-              child: const Text("Test sensor"),
+              child: const Text("Connect"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                viewModel.scan((id) {
+                  idController.text = id;
+                  updateUI();
+                });
+              },
+              child: const Text("Scan"),
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                Icon(Icons.signal_cellular_alt, size: 28),
+                Icon(Icons.menu, size: 28),
+              ],
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
