@@ -7,6 +7,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('ZoneLøb')),
+
       body: Center(
         child: ElevatedButton(
           onPressed: () {
@@ -16,22 +17,28 @@ class HomeView extends StatelessWidget {
         ),
       ),
 
-      // BottomAppBar som fod
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6,
-        child: Container(height: 60), // bar uden knapper
-      ),
-
-      // FloatingActionButton i nederste højre hjørne
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/history');
+      // BottomNavigationBar med to knapper
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          // index 0 = Sensor, index 1 = Historik
+          if (index == 0) {
+            Navigator.pushNamed(context, '/sensor');
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/history');
+          }
         },
-        child: const Icon(Icons.menu), // ☰
-        tooltip: 'Historik',
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sensors),
+            label: 'Sensor',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: 'Historik',
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }
+
