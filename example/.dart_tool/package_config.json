@@ -62,6 +62,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "flutter_reactive_ble",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/flutter_reactive_ble-5.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///Users/victoriavernon/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -72,6 +78,12 @@
       "rootUri": "file:///Users/victoriavernon/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.8"
+    },
+    {
+      "name": "functional_data",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/functional_data-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "leak_tracker",
@@ -213,15 +225,27 @@
     },
     {
       "name": "protobuf",
-      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/protobuf-3.1.0",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/protobuf-2.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.12"
     },
     {
       "name": "provider",
       "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/provider-6.1.5+1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "reactive_ble_mobile",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/reactive_ble_mobile-5.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "reactive_ble_platform_interface",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/reactive_ble_platform_interface-5.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "sky_engine",

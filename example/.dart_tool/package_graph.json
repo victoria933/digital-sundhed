@@ -80,7 +80,7 @@
       "version": "2.3.1",
       "dependencies": [
         "flutter",
-        "protobuf"
+        "flutter_reactive_ble"
       ]
     },
     {
@@ -276,12 +276,15 @@
       ]
     },
     {
-      "name": "protobuf",
-      "version": "3.1.0",
+      "name": "flutter_reactive_ble",
+      "version": "5.4.0",
       "dependencies": [
         "collection",
-        "fixnum",
-        "meta"
+        "flutter",
+        "functional_data",
+        "meta",
+        "reactive_ble_mobile",
+        "reactive_ble_platform_interface"
       ]
     },
     {
@@ -396,13 +399,50 @@
       ]
     },
     {
-      "name": "fixnum",
-      "version": "1.1.1",
-      "dependencies": []
+      "name": "reactive_ble_platform_interface",
+      "version": "5.4.0",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "functional_data",
+        "meta",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "reactive_ble_mobile",
+      "version": "5.4.0",
+      "dependencies": [
+        "flutter",
+        "protobuf",
+        "reactive_ble_platform_interface"
+      ]
+    },
+    {
+      "name": "functional_data",
+      "version": "1.2.0",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
     },
     {
       "name": "vm_service",
       "version": "15.0.2",
+      "dependencies": []
+    },
+    {
+      "name": "protobuf",
+      "version": "2.1.0",
+      "dependencies": [
+        "collection",
+        "fixnum",
+        "meta"
+      ]
+    },
+    {
+      "name": "fixnum",
+      "version": "1.1.1",
       "dependencies": []
     }
   ],
