@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 class SensorViewModel {
+  // 🔹 Singleton instance
+  static final SensorViewModel _instance = SensorViewModel._internal();
+
+  factory SensorViewModel() {
+    return _instance;
+  }
+
+  SensorViewModel._internal(); // privat constructor
+
   final FlutterReactiveBle ble = FlutterReactiveBle();
   DiscoveredDevice? moveSenseDevice;
 
@@ -16,7 +25,6 @@ class SensorViewModel {
         onFound(device.id); // fylder UUID i UI
       }
     }, onError: (error) {
-      // evt. håndter fejl
       debugPrint('Scan error: $error');
     });
   }
@@ -41,5 +49,9 @@ class SensorViewModel {
   void disconnect() {
     isConnectedNotifier.value = false;
   }
+
+  // 🔹 Hent UUID
+  String? get uuid => moveSenseDevice?.id;
 }
+
 

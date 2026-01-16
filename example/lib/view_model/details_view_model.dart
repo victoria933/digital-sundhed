@@ -1,9 +1,9 @@
 import '../model/run_session.dart';
 
 class DetailsViewModel {
-  RunSummary getLatestRun() {
+  RunSession getLatestRun() {
     // Her kan du hente fra sensor, database eller mock
-    return RunSummary(
+    return RunSession(
       zoneOverview: "Zone 3",
       pulse: 142,
       distance: 6.4,

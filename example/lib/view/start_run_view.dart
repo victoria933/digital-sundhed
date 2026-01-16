@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../view_model/start_run_view_model.dart';
+import '../view_model/sensor_view_model.dart';
+
 
 class StartRunView extends StatefulWidget {
   const StartRunView({super.key});
@@ -9,7 +11,9 @@ class StartRunView extends StatefulWidget {
 }
 
 class _StartRunViewState extends State<StartRunView> {
-  final StartRunViewModel viewModel = StartRunViewModel();
+final SensorViewModel sensorViewModel = SensorViewModel(); // singleton
+final StartRunViewModel viewModel = StartRunViewModel();
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +51,31 @@ class _StartRunViewState extends State<StartRunView> {
             ),
 
             // Start Run-knap
-            ElevatedButton(
+ElevatedButton(
   onPressed: viewModel.selectedZoneIndex != null
       ? () {
+          final uuid = sensorViewModel.uuid; // hent UUID fra senest scannede / connected Movesense
+          if (uuid == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Scan og connect til Movesense først')),
+            );
+            return;
+          }
+
           viewModel.startRun();
           Navigator.pushNamed(
             context,
             '/feedback',
-           arguments: {
-  'selectedZone': viewModel.selectedZoneIndex! + 1, // zone 1-5
-  'sensorUuid': '6228D0AF-4D20-DD21-9035-28EB2205BB90', // din Movesense UUID
-},
-
+            arguments: {
+              'selectedZone': viewModel.selectedZoneIndex! + 1, // zone 1-5
+              'sensorUuid': uuid, // bruger den dynamiske UUID
+            },
           );
         }
       : null,
   child: const Text('Start Run'),
 ),
+
 
           ],
         ),
