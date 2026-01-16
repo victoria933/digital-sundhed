@@ -31,11 +31,18 @@ class ZoneLoebApp extends StatelessWidget {
         '/history': (context) =>  HistoryView(),
         '/sensor': (context) => const SensorView(), 
         '/details': (context) => const DetailsView(),
-        '/feedback': (context) {
-  // Hent zone fra arguments
-  final selectedZone = ModalRoute.of(context)!.settings.arguments as int;
-  return FeedbackView(selectedZone: selectedZone);
+'/feedback': (context) {
+  // Arguments forventes som Map<String, dynamic>
+  final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+  final selectedZone = args['selectedZone'] as int;
+  final sensorUuid = args['sensorUuid'] as String;
+
+  return FeedbackView(
+    selectedZone: selectedZone,
+    sensorUuid: sensorUuid,
+  );
 },
+
 
       },
     );

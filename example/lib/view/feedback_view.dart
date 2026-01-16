@@ -3,9 +3,14 @@ import '../view_model/feedback_view_model.dart';
 import '../model/sensor_data.dart';
 
 class FeedbackView extends StatefulWidget {
-  final int selectedZone; // 1-5
+  final int selectedZone;
+  final String sensorUuid; // UUID på Movesense
 
-  const FeedbackView({super.key, required this.selectedZone});
+  const FeedbackView({
+    super.key,
+    required this.selectedZone,
+    required this.sensorUuid,
+  });
 
   @override
   State<FeedbackView> createState() => _FeedbackViewState();
@@ -18,7 +23,7 @@ class _FeedbackViewState extends State<FeedbackView> {
   void initState() {
     super.initState();
     viewModel = FeedbackViewModel(SensorData(), widget.selectedZone);
-    viewModel.startRun();
+    viewModel.startRun(widget.sensorUuid); // start HR-stream
   }
 
   @override
@@ -34,7 +39,6 @@ class _FeedbackViewState extends State<FeedbackView> {
       builder: (context, snapshot) {
         final feedback = snapshot.data ?? RunFeedback.keepPace;
 
-        // 🔴 Sæt farve, ikon og tekst baseret på feedback
         String text;
         Color color;
         IconData icon;
@@ -47,7 +51,7 @@ class _FeedbackViewState extends State<FeedbackView> {
             break;
           case RunFeedback.slowDown:
             text = 'Løb langsommere';
-            color = Colors.blue;
+            color = Colors.red;
             icon = Icons.trending_down;
             break;
           case RunFeedback.keepPace:
@@ -58,46 +62,28 @@ class _FeedbackViewState extends State<FeedbackView> {
         }
 
         return Scaffold(
-          // Farvet baggrund
           backgroundColor: color,
-       
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 170),
-                // 🔴 Live puls, tid og distance
+                const SizedBox(height: 40),
+
+                // 🔹 Live puls
                 StreamBuilder<int>(
                   stream: viewModel.heartRateStream,
                   builder: (context, hrSnapshot) {
                     final hr = hrSnapshot.data ?? 0;
-                    return Text('Pulse: $hr bpm',
-                        style: const TextStyle(fontSize: 20, color: Colors.white));
+                    return Text(
+                      'Pulse: $hr bpm',
+                      style: const TextStyle(fontSize: 24, color: Colors.white),
+                    );
                   },
                 ),
-                StreamBuilder<Duration>(
-                  stream: viewModel.timeStream,
-                  builder: (context, timeSnapshot) {
-                    final duration = timeSnapshot.data ?? Duration.zero;
-                    String twoDigits(int n) => n.toString().padLeft(2, '0');
-                    final formatted =
-                        "${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds % 60)}";
-                    return Text('Time: $formatted',
-                        style: const TextStyle(fontSize: 20, color: Colors.white));
-                  },
-                ),
-                StreamBuilder<double>(
-                  stream: viewModel.distanceStream,
-                  builder: (context, distanceSnapshot) {
-                    final distance = distanceSnapshot.data ?? 0.0;
-                    return Text('Distance: ${distance.toStringAsFixed(2)} km',
-                        style: const TextStyle(fontSize: 20, color: Colors.white));
-                  },
-                ),
-              
 
-                // 🔴 Feedback ikon og tekst
+                const SizedBox(height: 30),
+
+                // 🔹 Feedback ikon og tekst
                 Expanded(
                   child: Center(
                     child: Column(
@@ -117,14 +103,14 @@ class _FeedbackViewState extends State<FeedbackView> {
                   ),
                 ),
 
-                // 🔴 Stop-knap
+                // 🔹 Stop-knap
                 ElevatedButton(
                   onPressed: () {
                     viewModel.stopRun();
                     Navigator.pushNamed(context, '/history');
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                     backgroundColor: Colors.black.withOpacity(0.7),
                   ),
                   child: const Text(
@@ -140,6 +126,7 @@ class _FeedbackViewState extends State<FeedbackView> {
     );
   }
 }
+
 
 
 

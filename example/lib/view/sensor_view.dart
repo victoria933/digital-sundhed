@@ -15,7 +15,11 @@ class _SensorViewState extends State<SensorView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sensor")),
+      appBar: AppBar(
+        title: const Text("Sensor"),
+        centerTitle: true,
+        toolbarHeight: 100, // 🔹 højere AppBar
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -23,6 +27,7 @@ class _SensorViewState extends State<SensorView> {
             const Icon(Icons.bluetooth, size: 48),
             const SizedBox(height: 20),
 
+            // 🔹 Input til UUID
             TextField(
               controller: idController,
               decoration: const InputDecoration(
@@ -30,10 +35,9 @@ class _SensorViewState extends State<SensorView> {
                 border: OutlineInputBorder(),
               ),
             ),
-
             const SizedBox(height: 20),
 
-            // 🔹 Live status med ValueListenableBuilder
+            // 🔹 Live status
             ValueListenableBuilder<bool>(
               valueListenable: viewModel.isConnectedNotifier,
               builder: (context, isConnected, _) {
@@ -44,44 +48,70 @@ class _SensorViewState extends State<SensorView> {
                 );
               },
             ),
-
             const SizedBox(height: 30),
 
-            ElevatedButton.icon(
-              icon: const Icon(Icons.bluetooth_connected),
-              label: const Text("Connect"),
-              onPressed: () {
-                final uuid = idController.text.trim();
-                if (uuid.isEmpty) return;
+            // 🔹 Scan og Connect knapper
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.search, size: 28),
+                  label: const Text(
+                    "Scan",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    backgroundColor: Colors.orangeAccent,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () {
+                    viewModel.scan((uuid) {
+                      setState(() {
+                        idController.text = uuid;
+                      });
+                    });
+                  },
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.bluetooth_connected, size: 28),
+                  label: const Text(
+                    "Connect",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    backgroundColor: Colors.orangeAccent,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () {
+                    final uuid = idController.text.trim();
+                    if (uuid.isEmpty) return;
 
-                viewModel.connectById(uuid, (success) {
-                  // Callback bruges stadig hvis du vil lave popup eller toast
-                });
-              },
+                    viewModel.connectById(uuid, (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(success
+                              ? "Forbundet!"
+                              : "Fejl ved forbindelse"),
+                        ),
+                      );
+                    });
+                  },
+                ),
+              ],
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushNamed(context, '/sensor');
-          } else if (index == 1) {
-            Navigator.pushNamed(context, '/history');
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.sensors),
-            label: 'Sensor',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu),
-            label: 'Historik',
-          ),
-        ],
-      ),
     );
   }
 }
+
 

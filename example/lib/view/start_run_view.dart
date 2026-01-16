@@ -54,7 +54,11 @@ class _StartRunViewState extends State<StartRunView> {
           Navigator.pushNamed(
             context,
             '/feedback',
-            arguments: viewModel.selectedZoneIndex! + 1, // zone 1-5
+           arguments: {
+  'selectedZone': viewModel.selectedZoneIndex! + 1, // zone 1-5
+  'sensorUuid': '6228D0AF-4D20-DD21-9035-28EB2205BB90', // din Movesense UUID
+},
+
           );
         }
       : null,
