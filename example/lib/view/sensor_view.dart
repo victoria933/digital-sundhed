@@ -73,31 +73,33 @@ class _SensorViewState extends State<SensorView> {
 
             const Spacer(),
 
-            // Bund-ikoner (matcher din navigation)
-            Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-    IconButton(
-      icon: const Icon(Icons.signal_cellular_alt, size: 28),
-      tooltip: 'Start Run',
-      onPressed: () {
-        Navigator.pushNamed(context, '/start-run');
-      },
-    ),
-    IconButton(
-      icon: const Icon(Icons.menu, size: 28),
-      tooltip: 'Historik',
-      onPressed: () {
-        Navigator.pushNamed(context, '/history');
-      },
-    ),
-  ],
-),
+           
 
 
             const SizedBox(height: 20),
           ],
         ),
+        
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          // index 0 = Sensor, index 1 = Historik
+          if (index == 0) {
+            Navigator.pushNamed(context, '/sensor');
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/history');
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sensors),
+            label: 'Sensor',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: 'Historik',
+          ),
+        ],
       ),
     );
   }

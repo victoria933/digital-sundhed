@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import '../view_model/details_view_model.dart';
+import '../model/run_history.dart';
 
 class DetailsView extends StatelessWidget {
-  final viewModel = DetailsViewModel();
-
-  DetailsView({super.key});
+  const DetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final run = viewModel.getLatestRun();
+    // Hent den valgte run fra arguments
+    final run = ModalRoute.of(context)!.settings.arguments as RunHistory;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Løbsoversigt")),
@@ -18,46 +17,45 @@ class DetailsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
+
+            // Dato
+            Row(
+              children: [
+                const Icon(Icons.calendar_today, size: 28),
+                const SizedBox(width: 12),
+                Text("Dato: ${run.date.day}/${run.date.month}/${run.date.year}", style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Zone
             Row(
               children: [
                 const Icon(Icons.show_chart, size: 28),
                 const SizedBox(width: 12),
-                Text("Zone oversigt: ${run.zoneOverview}", style: const TextStyle(fontSize: 18)),
+                Text("Zone: ${run.zone}", style: const TextStyle(fontSize: 18)),
               ],
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                const Icon(Icons.favorite, size: 28),
-                const SizedBox(width: 12),
-                Text("Puls: ${run.pulse} bpm", style: const TextStyle(fontSize: 18)),
-              ],
-            ),
-            const SizedBox(height: 16),
+
+            // Distance
             Row(
               children: [
                 const Icon(Icons.location_on, size: 28),
                 const SizedBox(width: 12),
-                Text("Distance: ${run.distance} km", style: const TextStyle(fontSize: 18)),
+                Text("Distance: ${run.distance.toStringAsFixed(2)} km", style: const TextStyle(fontSize: 18)),
               ],
             ),
             const SizedBox(height: 16),
+
+            // Tid
             Row(
               children: [
                 const Icon(Icons.timer, size: 28),
                 const SizedBox(width: 12),
-                Text("Tid: ${run.time.inMinutes} min", style: const TextStyle(fontSize: 18)),
+                Text("Tid: ${run.duration.inMinutes} min", style: const TextStyle(fontSize: 18)),
               ],
             ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                Icon(Icons.signal_cellular_alt, size: 28),
-                Icon(Icons.menu, size: 28),
-              ],
-            ),
-            const SizedBox(height: 20),
           ],
         ),
       ),

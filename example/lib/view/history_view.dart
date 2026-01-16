@@ -20,6 +20,8 @@ class HistoryView extends StatelessWidget {
                 Expanded(child: Text('Tid', style: TextStyle(fontWeight: FontWeight.bold))),
                 Expanded(child: Text('Distance', style: TextStyle(fontWeight: FontWeight.bold))),
                 Expanded(child: Text('Zone', style: TextStyle(fontWeight: FontWeight.bold))),
+
+                
               ],
             ),
             Divider(),
@@ -34,6 +36,22 @@ class HistoryView extends StatelessWidget {
                       Expanded(child: Text('${run.duration.inMinutes} min')),
                       Expanded(child: Text('${run.distance.toStringAsFixed(2)} km')),
                       Expanded(child: Text('${run.zone} zone')),
+
+
+                      SizedBox(
+                          width: 80,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/details',
+                                arguments: run, // sender run til DetailsView
+                              );
+                            },
+                            child: const Text('Details', textAlign: TextAlign.center),
+                          ),
+                        ),
+
                     ],
                   );
                 },
