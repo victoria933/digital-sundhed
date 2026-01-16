@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'view/home_view.dart';
 import 'view/start_run_view.dart';
 import 'view/history_view.dart';
-import 'view/sensor_view.dart'; // hvis du har den
+import 'view/sensor_view.dart'; 
 import 'view/details_view.dart';
+import 'view/feedback_view.dart';
 
 void main() {
   runApp(const ZoneLoebApp());
@@ -25,11 +26,17 @@ class ZoneLoebApp extends StatelessWidget {
       initialRoute: '/',
 
       routes: {
-        '/': (context) => const HomeView(),
+        '/': (context) =>  HomeView(),
         '/start-run': (context) => const StartRunView(),
         '/history': (context) =>  HistoryView(),
-        '/sensor': (context) => const SensorView(), // valgfri
+        '/sensor': (context) => const SensorView(), 
         '/details': (context) => const DetailsView(),
+        '/feedback': (context) {
+  // Hent zone fra arguments
+  final selectedZone = ModalRoute.of(context)!.settings.arguments as int;
+  return FeedbackView(selectedZone: selectedZone);
+},
+
       },
     );
   }

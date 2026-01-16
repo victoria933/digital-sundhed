@@ -9,52 +9,120 @@ class HistoryView extends StatelessWidget {
     final history = viewModel.getHistory();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Historik')),
+      appBar: AppBar(
+        title: const Text('Historik'),
+        automaticallyImplyLeading: false, // fjern tilbage-pil
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: const [
-                Expanded(child: Text('Dato', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(child: Text('Tid', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(child: Text('Distance', style: TextStyle(fontWeight: FontWeight.bold))),
-                Expanded(child: Text('Zone', style: TextStyle(fontWeight: FontWeight.bold))),
 
-                
+            // ===== HEADER =====
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(2),   // Dato
+                1: FlexColumnWidth(2),   // Tid
+                2: FlexColumnWidth(2),   // Distance
+                3: FlexColumnWidth(1.5), // Zone
+                4: FixedColumnWidth(48), // menu
+              },
+              children: const [
+                TableRow(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Dato', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Tid', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Distance', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Zone', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(),
+                  ],
+                ),
               ],
             ),
-            Divider(),
+
+            const Divider(),
+
+            // ===== DATA =====
             Expanded(
               child: ListView.builder(
                 itemCount: history.length,
                 itemBuilder: (context, index) {
                   final run = history[index];
-                  return Row(
+
+                  return Table(
+                    columnWidths: const {
+                      0: FlexColumnWidth(2),
+                      1: FlexColumnWidth(2),
+                      2: FlexColumnWidth(2),
+                      3: FlexColumnWidth(1.5),
+                      4: FixedColumnWidth(48),
+                    },
                     children: [
-                      Expanded(child: Text('${run.date.day}/${run.date.month}')),
-                      Expanded(child: Text('${run.duration.inMinutes} min')),
-                      Expanded(child: Text('${run.distance.toStringAsFixed(2)} km')),
-                      Expanded(child: Text('${run.zone} zone')),
-
-
-                      SizedBox(
-                          width: 80,
-                          child: ElevatedButton(
+                      TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text('${run.date.day}/${run.date.month}'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text('${run.duration.inMinutes} min'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text('${run.distance.toStringAsFixed(2)} km'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text('${run.zone}'),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.more_horiz),
                             onPressed: () {
                               Navigator.pushNamed(
                                 context,
                                 '/details',
-                                arguments: run, // sender run til DetailsView
+                                arguments: run,
                               );
                             },
-                            child: const Text('Details', textAlign: TextAlign.center),
                           ),
-                        ),
-
+                        ],
+                      ),
                     ],
                   );
                 },
+              ),
+            ),
+
+            // ===== HOME KNAP =====
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/',
+                    (route) => false, // fjerner alle tidligere routes
+                  );
+                },
+                icon: const Icon(Icons.home),
+                label: const Text('Home'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
               ),
             ),
           ],
@@ -63,4 +131,5 @@ class HistoryView extends StatelessWidget {
     );
   }
 }
+
 

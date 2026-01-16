@@ -12,8 +12,6 @@ class _SensorViewState extends State<SensorView> {
   final SensorViewModel viewModel = SensorViewModel();
   final TextEditingController idController = TextEditingController();
 
-  String status = "ikke forbundet";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,62 +26,44 @@ class _SensorViewState extends State<SensorView> {
             TextField(
               controller: idController,
               decoration: const InputDecoration(
-                labelText: "Sensor ID",
+                labelText: "Sensor UUID",
                 border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            Text(
-              "Status: $status",
-              style: const TextStyle(fontSize: 18),
+            // 🔹 Live status med ValueListenableBuilder
+            ValueListenableBuilder<bool>(
+              valueListenable: viewModel.isConnectedNotifier,
+              builder: (context, isConnected, _) {
+                String status = isConnected ? "forbundet" : "ikke forbundet";
+                return Text(
+                  "Status: $status",
+                  style: const TextStyle(fontSize: 18),
+                );
+              },
             ),
 
             const SizedBox(height: 30),
 
-            //  CONNECT + SCAN knapper
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.bluetooth_connected),
-                  label: const Text("Connect"),
-                  onPressed: () {
-                    viewModel.connect((success) {
-                      setState(() {
-                        status = success ? "forbundet" : "fejl";
-                      });
-                    });
-                  },
-                ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.search),
-                  label: const Text("Scan"),
-                  onPressed: () {
-                    viewModel.scan((id) {
-                      setState(() {
-                        idController.text = id;
-                      });
-                    });
-                  },
-                ),
-              ],
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bluetooth_connected),
+              label: const Text("Connect"),
+              onPressed: () {
+                final uuid = idController.text.trim();
+                if (uuid.isEmpty) return;
+
+                viewModel.connectById(uuid, (success) {
+                  // Callback bruges stadig hvis du vil lave popup eller toast
+                });
+              },
             ),
-
-            const Spacer(),
-
-           
-
-
-            const SizedBox(height: 20),
           ],
         ),
-        
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          // index 0 = Sensor, index 1 = Historik
           if (index == 0) {
             Navigator.pushNamed(context, '/sensor');
           } else if (index == 1) {
@@ -104,3 +84,4 @@ class _SensorViewState extends State<SensorView> {
     );
   }
 }
+

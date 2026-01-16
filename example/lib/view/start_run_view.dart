@@ -48,14 +48,19 @@ class _StartRunViewState extends State<StartRunView> {
 
             // Start Run-knap
             ElevatedButton(
-              onPressed: viewModel.selectedZoneIndex != null
-                  ? () {
-                      viewModel.startRun();
-                      // Naviger evt. til løbetracking side
-                    }
-                  : null, // deaktiveret hvis ingen zone valgt
-              child: const Text('Start Run'),
-            ),
+  onPressed: viewModel.selectedZoneIndex != null
+      ? () {
+          viewModel.startRun();
+          Navigator.pushNamed(
+            context,
+            '/feedback',
+            arguments: viewModel.selectedZoneIndex! + 1, // zone 1-5
+          );
+        }
+      : null,
+  child: const Text('Start Run'),
+),
+
           ],
         ),
       ),
