@@ -6,6 +6,7 @@ import 'view/sensor_view.dart';
 import 'view/details_view.dart';
 import 'view/feedback_view.dart';
 
+
 void main() {
   runApp(const ZoneLoebApp());
 }
@@ -32,16 +33,19 @@ class ZoneLoebApp extends StatelessWidget {
         '/sensor': (context) => const SensorView(), 
         '/details': (context) => const DetailsView(),
 '/feedback': (context) {
-  // Arguments forventes som Map<String, dynamic>
   final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
   final selectedZone = args['selectedZone'] as int;
   final sensorUuid = args['sensorUuid'] as String;
+  final age = args['age'] as int; // hent alder
 
   return FeedbackView(
     selectedZone: selectedZone,
     sensorUuid: sensorUuid,
+    age: age, // nu matcher konstruktøren
   );
 },
+
+
 
 
       },

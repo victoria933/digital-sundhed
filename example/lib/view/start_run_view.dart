@@ -11,8 +11,18 @@ class StartRunView extends StatefulWidget {
 }
 
 class _StartRunViewState extends State<StartRunView> {
-final SensorViewModel sensorViewModel = SensorViewModel(); // singleton
-final StartRunViewModel viewModel = StartRunViewModel();
+  final StartRunViewModel viewModel = StartRunViewModel();
+  final SensorViewModel sensorViewModel = SensorViewModel(); // 🔹 Singleton
+  int age = 30; // default
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    if (args != null && args['age'] != null) {
+      age = args['age'];
+    }
+  }
 
 
   @override
@@ -54,7 +64,7 @@ final StartRunViewModel viewModel = StartRunViewModel();
 ElevatedButton(
   onPressed: viewModel.selectedZoneIndex != null
       ? () {
-          final uuid = sensorViewModel.uuid; // hent UUID fra senest scannede / connected Movesense
+          final uuid = sensorViewModel.uuid; 
           if (uuid == null) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Scan og connect til Movesense først')),
@@ -67,14 +77,16 @@ ElevatedButton(
             context,
             '/feedback',
             arguments: {
-              'selectedZone': viewModel.selectedZoneIndex! + 1, // zone 1-5
-              'sensorUuid': uuid, // bruger den dynamiske UUID
+              'selectedZone': viewModel.selectedZoneIndex! + 1,
+              'sensorUuid': uuid,
+              'age': age, // 🔹 nu med alder
             },
           );
         }
       : null,
   child: const Text('Start Run'),
 ),
+
 
 
           ],

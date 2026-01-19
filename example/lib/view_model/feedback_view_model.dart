@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import '../model/sensor_data.dart';
 
 enum RunFeedback { slowDown, keepPace, speedUp }
@@ -9,37 +10,63 @@ class PulseZone {
   PulseZone(this.minHr, this.maxHr);
 }
 
-class FeedbackViewModel {
+class FeedbackViewModel extends ChangeNotifier {
   final SensorData sensorData;
   final int selectedZone; // 1-5
+  final int age; // For maxpuls formel: 220 - alder
+  final int restingHr; // Hvis du vil inkludere heart rate reserve
 
-  FeedbackViewModel(this.sensorData, this.selectedZone);
+  int _currentHr = 0;
+  int get currentHr => _currentHr;
 
-  // Puls-stream
-  Stream<int> get heartRateStream => sensorData.hrStream;
+  RunFeedback _currentFeedback = RunFeedback.keepPace;
+  RunFeedback get currentFeedback => _currentFeedback;
 
-  // Feedback baseret på valgt zone
-  late final Stream<RunFeedback> feedbackStream =
-      heartRateStream.map((hr) {
-    final zones = [
-      PulseZone(60, 80),
-      PulseZone(81, 100),
-      PulseZone(101, 120),
-      PulseZone(121, 140),
-      PulseZone(141, 160),
-    ];
+  late final List<PulseZone> zones;
+  StreamSubscription<int>? _hrSub;
+
+  FeedbackViewModel({
+    required this.sensorData,
+    required this.selectedZone,
+    required this.age,
+    this.restingHr = 60,
+  }) {
+    // 🔹 Beregn maxpuls og zonegrænser dynamisk
+    final maxHr = 220 - age;
+    zones = List.generate(5, (i) {
+      final min = restingHr + ((i * 20) / 100 * (maxHr - restingHr)).round();
+      final max = restingHr + (((i + 1) * 20) / 100 * (maxHr - restingHr)).round();
+      return PulseZone(min, max);
+    });
+
+    // 🔹 Lyt til puls
+    _hrSub = sensorData.hrStream.listen((hr) {
+      _currentHr = hr;
+      _updateFeedback(hr);
+      notifyListeners();
+    });
+  }
+
+  void _updateFeedback(int hr) {
     final zone = zones[selectedZone - 1];
+    if (hr < zone.minHr) {
+      _currentFeedback = RunFeedback.speedUp;
+    } else if (hr > zone.maxHr) {
+      _currentFeedback = RunFeedback.slowDown;
+    } else {
+      _currentFeedback = RunFeedback.keepPace;
+    }
+  }
 
-    if (hr < zone.minHr) return RunFeedback.speedUp;
-    if (hr > zone.maxHr) return RunFeedback.slowDown;
-    return RunFeedback.keepPace;
-  });
-
-  // Start/stop
   void startRun(String uuid) => sensorData.start(uuid);
   void stopRun() => sensorData.stop();
-  void dispose() => sensorData.dispose();
-}
 
+  @override
+  void dispose() {
+    _hrSub?.cancel();
+    sensorData.dispose();
+    super.dispose();
+  }
+}
 
 

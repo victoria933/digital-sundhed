@@ -13,7 +13,7 @@ enum SensorState {
 
 
 class SensorViewModel {
-  // 🔹 Singleton
+  //  Singleton
   static final SensorViewModel _instance = SensorViewModel._internal();
   factory SensorViewModel() => _instance;
   SensorViewModel._internal();
@@ -21,11 +21,11 @@ class SensorViewModel {
   final FlutterReactiveBle ble = FlutterReactiveBle();
   DiscoveredDevice? moveSenseDevice;
 
-  // 🔹 STATE
+  //  STATE
   final ValueNotifier<SensorState> stateNotifier =
       ValueNotifier(SensorState.idle);
 
-  // 🔹 Scan efter Movesense
+  //  Scan efter Movesense
 void scan(Function(String uuid) onFound) {
   stateNotifier.value = SensorState.scanning;
 
