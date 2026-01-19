@@ -1,5 +1,8 @@
 PODS:
   - Flutter (1.0.0)
+  - geolocator_apple (1.2.0):
+    - Flutter
+    - FlutterMacOS
   - mdsflutter (0.0.1):
     - Flutter
     - Movesense
@@ -20,6 +23,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/darwin`)
   - mdsflutter (from `.symlinks/plugins/mdsflutter/ios`)
   - Movesense (from `https://bitbucket.org/movesense/movesense-mobile-lib.git`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -34,6 +38,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/darwin"
   mdsflutter:
     :path: ".symlinks/plugins/mdsflutter/ios"
   Movesense:
@@ -52,6 +58,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  geolocator_apple: ab36aa0e8b7d7a2d7639b3b4e48308394e8cef5e
   mdsflutter: bd3c0b3335d50947d1a192cf70f930e0fb04a766
   Movesense: dc64047c1feb856b7f7ac6ea2c67685350d99dd5
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880

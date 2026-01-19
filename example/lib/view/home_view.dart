@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../view_model/sensor_view_model.dart';
 
+
+
 class HomeView extends StatelessWidget {
   HomeView({super.key});
 
@@ -29,16 +31,22 @@ class HomeView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ValueListenableBuilder<bool>(
-                  valueListenable: sensorViewModel.isConnectedNotifier,
-                  builder: (context, isConnected, _) {
-                    return Icon(
-                      isConnected ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
-                      color: isConnected ? Colors.green : Colors.red,
-                      size: 60,
-                    );
-                  },
-                ),
+                
+ValueListenableBuilder<SensorState>(
+  valueListenable: sensorViewModel.stateNotifier,
+  builder: (context, state, _) {
+    final isConnected = state == SensorState.connected;
+
+    return Icon(
+      isConnected
+          ? Icons.bluetooth_connected
+          : Icons.bluetooth_disabled,
+      color: isConnected ? Colors.green : Colors.red,
+      size: 60,
+    );
+  },
+),
+
               ],
             ),
           ),

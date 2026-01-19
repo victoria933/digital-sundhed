@@ -1,57 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'dart:async'; 
+
+enum SensorState {
+  idle,
+  scanning,
+  connecting,
+  connected,
+  disconnected,
+  error,
+}
+
 
 class SensorViewModel {
-  // 🔹 Singleton instance
+  // 🔹 Singleton
   static final SensorViewModel _instance = SensorViewModel._internal();
-
-  factory SensorViewModel() {
-    return _instance;
-  }
-
-  SensorViewModel._internal(); // privat constructor
+  factory SensorViewModel() => _instance;
+  SensorViewModel._internal();
 
   final FlutterReactiveBle ble = FlutterReactiveBle();
   DiscoveredDevice? moveSenseDevice;
 
-  // 🔹 Notifier for live connection status
-  final ValueNotifier<bool> isConnectedNotifier = ValueNotifier(false);
+  // 🔹 STATE
+  final ValueNotifier<SensorState> stateNotifier =
+      ValueNotifier(SensorState.idle);
 
-  // 🔹 Scan efter Movesense-enheder og returner UUID
-  void scan(Function(String uuid) onFound) {
-    ble.scanForDevices(withServices: []).listen((device) {
-      if (device.name.contains("Movesense")) {
-        moveSenseDevice = device;
-        onFound(device.id); // fylder UUID i UI
-      }
-    }, onError: (error) {
-      debugPrint('Scan error: $error');
-    });
-  }
+  // 🔹 Scan efter Movesense
+void scan(Function(String uuid) onFound) {
+  stateNotifier.value = SensorState.scanning;
+
+  // Gem subscription, så vi kan stoppe scanningen
+  late StreamSubscription subscription;
+  subscription = ble.scanForDevices(withServices: []).listen((device) {
+    if (device.name.contains("Movesense")) {
+      moveSenseDevice = device;
+      onFound(device.id);          // fylder UUID i UI
+      stateNotifier.value = SensorState.idle;
+      
+      // Stop scanningen efter første Movesense
+      subscription.cancel();
+    }
+  }, onError: (_) {
+    stateNotifier.value = SensorState.error;
+  });
+}
+
 
   // 🔹 Connect via UUID
-  void connectById(String id, Function(bool success) onConnected) {
+  void connectById(String id) {
+    stateNotifier.value = SensorState.connecting;
+
     ble.connectToDevice(id: id).listen((connectionState) {
-      if (connectionState.connectionState == DeviceConnectionState.connected) {
-        isConnectedNotifier.value = true;
-        onConnected(true);
+      if (connectionState.connectionState ==
+          DeviceConnectionState.connected) {
+        stateNotifier.value = SensorState.connected;
       } else if (connectionState.connectionState ==
           DeviceConnectionState.disconnected) {
-        isConnectedNotifier.value = false;
-        onConnected(false);
+        stateNotifier.value = SensorState.disconnected;
       }
     }, onError: (_) {
-      isConnectedNotifier.value = false;
-      onConnected(false);
+      stateNotifier.value = SensorState.error;
     });
   }
 
   void disconnect() {
-    isConnectedNotifier.value = false;
+    stateNotifier.value = SensorState.disconnected;
   }
 
-  // 🔹 Hent UUID
   String? get uuid => moveSenseDevice?.id;
 }
-
 

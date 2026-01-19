@@ -18,7 +18,7 @@ class _SensorViewState extends State<SensorView> {
       appBar: AppBar(
         title: const Text("Sensor"),
         centerTitle: true,
-        toolbarHeight: 100, // 🔹 højere AppBar
+        toolbarHeight: 100,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -27,7 +27,6 @@ class _SensorViewState extends State<SensorView> {
             const Icon(Icons.bluetooth, size: 48),
             const SizedBox(height: 20),
 
-            // 🔹 Input til UUID
             TextField(
               controller: idController,
               decoration: const InputDecoration(
@@ -35,39 +34,58 @@ class _SensorViewState extends State<SensorView> {
                 border: OutlineInputBorder(),
               ),
             ),
+
             const SizedBox(height: 20),
 
-            // 🔹 Live status
-            ValueListenableBuilder<bool>(
-              valueListenable: viewModel.isConnectedNotifier,
-              builder: (context, isConnected, _) {
-                String status = isConnected ? "forbundet" : "ikke forbundet";
+            //Status baseret på SensorState
+            ValueListenableBuilder<SensorState>(
+              valueListenable: viewModel.stateNotifier,
+              builder: (context, state, _) {
+                String text;
+                Color color;
+
+                switch (state) {
+                  case SensorState.scanning:
+                    text = "Scanner...";
+                    color = Colors.blue;
+                    break;
+                  case SensorState.connecting:
+                    text = "Forbinder...";
+                    color = Colors.orange;
+                    break;
+                  case SensorState.connected:
+                    text = "Forbundet";
+                    color = Colors.green;
+                    break;
+                  case SensorState.disconnected:
+                    text = "Afbrudt";
+                    color = Colors.grey;
+                    break;
+                  case SensorState.error:
+                    text = "Fejl";
+                    color = Colors.red;
+                    break;
+                  default:
+                    text = "Idle";
+                    color = Colors.black;
+                }
+
                 return Text(
-                  "Status: $status",
-                  style: const TextStyle(fontSize: 18),
+                  "Status: $text",
+                  style: TextStyle(fontSize: 18, color: color),
                 );
               },
             ),
+
             const SizedBox(height: 30),
 
-            // 🔹 Scan og Connect knapper
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                //Scan-knap
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.search, size: 28),
-                  label: const Text(
-                    "Scan",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 16),
-                    backgroundColor: Colors.orangeAccent,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
+                  icon: const Icon(Icons.search),
+                  label: const Text("Scan"),
                   onPressed: () {
                     viewModel.scan((uuid) {
                       setState(() {
@@ -76,33 +94,29 @@ class _SensorViewState extends State<SensorView> {
                     });
                   },
                 ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.bluetooth_connected, size: 28),
-                  label: const Text(
-                    "Connect",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 16),
-                    backgroundColor: Colors.orangeAccent,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: () {
-                    final uuid = idController.text.trim();
-                    if (uuid.isEmpty) return;
 
-                    viewModel.connectById(uuid, (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(success
-                              ? "Forbundet!"
-                              : "Fejl ved forbindelse"),
-                        ),
-                      );
-                    });
+                //Connect / Disconnect-knap
+                ValueListenableBuilder<SensorState>(
+                  valueListenable: viewModel.stateNotifier,
+                  builder: (context, state, _) {
+                    final isConnected = state == SensorState.connected;
+
+                    return ElevatedButton.icon(
+                      icon: Icon(
+                        isConnected
+                            ? Icons.bluetooth_disabled
+                            : Icons.bluetooth_connected,
+                      ),
+                      label: Text(isConnected ? "Disconnect" : "Connect"),
+                      onPressed: () {
+                        final uuid = idController.text.trim();
+                        if (isConnected) {
+                          viewModel.disconnect();
+                        } else if (uuid.isNotEmpty) {
+                          viewModel.connectById(uuid);
+                        }
+                      },
+                    );
                   },
                 ),
               ],
@@ -113,5 +127,6 @@ class _SensorViewState extends State<SensorView> {
     );
   }
 }
+
 
 

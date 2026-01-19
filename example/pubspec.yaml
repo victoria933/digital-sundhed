@@ -28,6 +28,7 @@ dependencies:
 
   permission_handler: ^11.4.0
   path_provider: ^2.0.11
+  geolocator: ^10.1.0
   
 dev_dependencies:
   flutter_test:
