@@ -290,6 +290,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "sembast",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/sembast-3.8.5+2",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/victoriavernon/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -318,6 +324,12 @@
       "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/string_scanner-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "synchronized",
+      "rootUri": "file:///Users/victoriavernon/.pub-cache/hosted/pub.dev/synchronized-3.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
     },
     {
       "name": "term_glyph",

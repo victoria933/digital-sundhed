@@ -26,6 +26,11 @@
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>App uses bluetooth</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>Vi bruger GPS til at måle din løbedistance</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Vi bruger GPS til at måle din løbedistance, også når appen kører i baggrunden</string>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

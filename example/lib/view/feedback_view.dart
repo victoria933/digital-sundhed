@@ -5,7 +5,7 @@ import '../model/sensor_data.dart';
 class FeedbackView extends StatefulWidget {
   final int selectedZone;
   final String sensorUuid; // UUID på Movesense
-  final int age; // alder
+  final int age; 
 
   const FeedbackView({
     super.key,
@@ -29,7 +29,7 @@ class _FeedbackViewState extends State<FeedbackView> {
       selectedZone: widget.selectedZone,
       age: widget.age,
     );
-    viewModel.startRun(widget.sensorUuid); // start HR-stream
+    viewModel.startRun(widget.sensorUuid); // start HR-stream + GPS
   }
 
   @override
@@ -46,7 +46,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         final feedback = viewModel.currentFeedback;
         final hr = viewModel.currentHr;
         final elapsed = viewModel.elapsed;
-
+        final distance = viewModel.totalDistance; // 🔹 Distance i meter
 
         String text;
         Color color;
@@ -78,25 +78,33 @@ class _FeedbackViewState extends State<FeedbackView> {
               children: [
                 const SizedBox(height: 40),
 
-                  // ⏱️ Tid
-                  Text(
-                    formatDuration(elapsed),
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                // Tid
+                Text(
+                  formatDuration(elapsed),
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 40),
+                ),
+                const SizedBox(height: 20),
 
+                // Puls
                 Text(
                   'Pulse: $hr bpm',
                   style: const TextStyle(fontSize: 24, color: Colors.white),
                 ),
+
+                const SizedBox(height: 10),
+
+                // Distance
+                Text(
+                  'Distance: ${distance.toStringAsFixed(1)} m',
+                  style: const TextStyle(fontSize: 24, color: Colors.white),
+                ),
+
                 const SizedBox(height: 30),
 
-
-                
                 Expanded(
                   child: Center(
                     child: Column(
@@ -138,14 +146,14 @@ class _FeedbackViewState extends State<FeedbackView> {
     );
   }
 
-  /// ⏱️ Formatterer tid til mm:ss
-String formatDuration(Duration d) {
-  final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-  final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-  return '$minutes:$seconds';
-  
+  // Formatterer tid til mm:ss
+  String formatDuration(Duration d) {
+    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
 }
-}
+
 
 
 
