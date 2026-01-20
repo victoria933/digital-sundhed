@@ -5,13 +5,13 @@ import '../model/sensor_data.dart';
 class FeedbackView extends StatefulWidget {
   final int selectedZone;
   final String sensorUuid; // UUID på Movesense
-  final int age; // Tilføj alder
+  final int age; // alder
 
   const FeedbackView({
     super.key,
     required this.selectedZone,
     required this.sensorUuid,
-    required this.age, // obligatorisk parameter
+    required this.age, 
   });
 
   @override
@@ -27,8 +27,7 @@ class _FeedbackViewState extends State<FeedbackView> {
     viewModel = FeedbackViewModel(
       sensorData: SensorData(),
       selectedZone: widget.selectedZone,
-      age: 30, // fx din alder
-      restingHr: 60,
+      age: widget.age,
     );
     viewModel.startRun(widget.sensorUuid); // start HR-stream
   }
@@ -46,6 +45,8 @@ class _FeedbackViewState extends State<FeedbackView> {
       builder: (context, _) {
         final feedback = viewModel.currentFeedback;
         final hr = viewModel.currentHr;
+        final elapsed = viewModel.elapsed;
+
 
         String text;
         Color color;
@@ -54,12 +55,12 @@ class _FeedbackViewState extends State<FeedbackView> {
         switch (feedback) {
           case RunFeedback.speedUp:
             text = 'Speed up';
-            color = Colors.orange;
+            color = const Color.fromARGB(255, 238, 96, 200);
             icon = Icons.trending_up;
             break;
           case RunFeedback.slowDown:
             text = 'Løb langsommere';
-            color = Colors.red;
+            color = const Color.fromARGB(255, 23, 110, 241);
             icon = Icons.trending_down;
             break;
           case RunFeedback.keepPace:
@@ -76,11 +77,26 @@ class _FeedbackViewState extends State<FeedbackView> {
             child: Column(
               children: [
                 const SizedBox(height: 40),
+
+                  // ⏱️ Tid
+                  Text(
+                    formatDuration(elapsed),
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
                 Text(
                   'Pulse: $hr bpm',
                   style: const TextStyle(fontSize: 24, color: Colors.white),
                 ),
                 const SizedBox(height: 30),
+
+
+                
                 Expanded(
                   child: Center(
                     child: Column(
@@ -121,8 +137,15 @@ class _FeedbackViewState extends State<FeedbackView> {
       },
     );
   }
-}
 
+  /// ⏱️ Formatterer tid til mm:ss
+String formatDuration(Duration d) {
+  final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+  final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+  return '$minutes:$seconds';
+  
+}
+}
 
 
 
