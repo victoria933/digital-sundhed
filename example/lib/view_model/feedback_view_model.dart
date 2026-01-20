@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import '../model/sensor_data.dart';
+import '../data/storage.dart';
+
+
 
 enum RunFeedback { slowDown, keepPace, speedUp }
 
@@ -13,12 +16,13 @@ class PulseZone {
 
 class FeedbackViewModel extends ChangeNotifier {
   final SensorData sensorData;
-  final int selectedZone; // 1–5
-  final int age; // bruges til maxHR = 220 - age
+  final int selectedZone;
+  final int age;
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
-  Duration get elapsed => _stopwatch.elapsed;
+  final List<int> _hrSamples = [];
 
+  Duration get elapsed => _stopwatch.elapsed;
   int _currentHr = 0;
   int get currentHr => _currentHr;
 
@@ -28,9 +32,9 @@ class FeedbackViewModel extends ChangeNotifier {
   late final List<PulseZone> zones;
   StreamSubscription<int>? _hrSub;
 
-  // 🔹 GPS / Distance
+  // GPS / Distance
   Position? _lastPosition;
-  double totalDistance = 0.0; // i meter
+  double totalDistance = 0.0;
   StreamSubscription<Position>? _positionStream;
 
   FeedbackViewModel({
@@ -40,7 +44,6 @@ class FeedbackViewModel extends ChangeNotifier {
   }) {
     final maxHr = 220 - age;
 
-    // Zonegrænser som % af maxHR
     zones = List.generate(5, (i) {
       final min = ((50 + i * 10) / 100 * maxHr).round();
       final max = ((50 + (i + 1) * 10) / 100 * maxHr).round();
@@ -48,11 +51,15 @@ class FeedbackViewModel extends ChangeNotifier {
     });
 
     // Lyt til puls
-    _hrSub = sensorData.hrStream.listen((hr) {
-      _currentHr = hr;
-      _updateFeedback(hr);
-      notifyListeners();
-    });
+_hrSub = sensorData.hrStream.listen((hr) {
+  _currentHr = hr;
+
+  _hrSamples.add(hr); //  GEM SAMPLE
+
+  _updateFeedback(hr);
+  notifyListeners();
+});
+
   }
 
   void _updateFeedback(int hr) {
@@ -67,44 +74,59 @@ class FeedbackViewModel extends ChangeNotifier {
     }
   }
 
-  // 🔹 Start GPS tracking
-  Future<void> _startGPSTracking() async {
-    bool permissionGranted = await _handleLocationPermission();
-    if (!permissionGranted) return;
+Future<void> _startGPSTracking() async {
+  final ok = await _handleLocationPermission();
+  if (!ok) return;
 
-    _positionStream = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.bestForNavigation,
-        distanceFilter: 1,
-      ),
-    ).listen((position) {
-      _updateDistance(position);
-    });
-  }
+  // ⭐ FØRSTE FIX
+  _lastPosition = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.bestForNavigation,
+  );
 
-  // 🔹 Stop GPS tracking
+  _positionStream = Geolocator.getPositionStream(
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 5,
+    ),
+  ).listen(_updateDistance);
+}
+
+
   void _stopGPSTracking() {
     _positionStream?.cancel();
     _positionStream = null;
     _lastPosition = null;
-    totalDistance = 0.0;
   }
 
-  // 🔹 Beregn distance
-  void _updateDistance(Position position) {
-    if (_lastPosition != null) {
-      totalDistance += Geolocator.distanceBetween(
-        _lastPosition!.latitude,
-        _lastPosition!.longitude,
-        position.latitude,
-        position.longitude,
-      );
-    }
-    _lastPosition = position;
-    notifyListeners();
+void _updateDistance(Position position) {
+  debugPrint(
+    'GPS: ${position.latitude}, ${position.longitude}'
+  );
+
+  if (_lastPosition != null) {
+    final d = Geolocator.distanceBetween(
+      _lastPosition!.latitude,
+      _lastPosition!.longitude,
+      position.latitude,
+      position.longitude,
+    );
+    totalDistance += d;
+    debugPrint('Δ distance: $d m');
   }
 
-  // 🔹 Location permissions
+  _lastPosition = position;
+  notifyListeners();
+}
+
+
+  int _calculateAverageHr() {
+  if (_hrSamples.isEmpty) return 0;
+
+  final sum = _hrSamples.reduce((a, b) => a + b);
+  return (sum / _hrSamples.length).round();
+}
+
+
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) return false;
@@ -116,12 +138,14 @@ class FeedbackViewModel extends ChangeNotifier {
     }
 
     if (permission == LocationPermission.deniedForever) return false;
-
     return true;
   }
 
-  // Start run + GPS
   void startRun(String uuid) {
+      _hrSamples.clear(); 
+    totalDistance = 0.0;      
+    _lastPosition = null;     
+
     _stopwatch
       ..reset()
       ..start();
@@ -132,21 +156,29 @@ class FeedbackViewModel extends ChangeNotifier {
     });
 
     sensorData.start(uuid);
-
-    // 🔹 start GPS
     _startGPSTracking();
   }
 
-  void stopRun() {
-    _stopwatch.stop();
-    _timer?.cancel();
-    sensorData.stop();
+Future<void> stopRun() async {
+  _stopwatch.stop();
+  _timer?.cancel();
+  sensorData.stop();
+  _stopGPSTracking();
 
-    // 🔹 stop GPS
-    _stopGPSTracking();
+  final avgHr = _calculateAverageHr(); // ⭐
 
-    notifyListeners();
-  }
+  final storage = RunStorage();
+  await storage.init();
+
+  await storage.addRun(
+    elapsedSeconds: _stopwatch.elapsed.inSeconds,
+    averageHr: avgHr,              
+    distanceMeters: totalDistance,
+    zone: selectedZone,
+  );
+
+  notifyListeners();
+}
 
   @override
   void dispose() {

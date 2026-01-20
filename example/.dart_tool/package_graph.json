@@ -39,6 +39,15 @@
       ]
     },
     {
+      "name": "sembast",
+      "version": "3.8.5+2",
+      "dependencies": [
+        "meta",
+        "path",
+        "synchronized"
+      ]
+    },
+    {
       "name": "geolocator",
       "version": "10.1.1",
       "dependencies": [
@@ -192,6 +201,11 @@
         "string_scanner",
         "term_glyph"
       ]
+    },
+    {
+      "name": "synchronized",
+      "version": "3.4.0",
+      "dependencies": []
     },
     {
       "name": "geolocator_windows",
@@ -526,20 +540,6 @@
       "dependencies": [
         "collection"
       ]
-    },
-    {
-      "name": "sembast",
-      "version": "3.8.5+2",
-      "dependencies": [
-        "meta",
-        "path",
-        "synchronized"
-      ]
-    },
-    {
-      "name": "synchronized",
-      "version": "3.4.0",
-      "dependencies": []
     }
   ],
   "configVersion": 1

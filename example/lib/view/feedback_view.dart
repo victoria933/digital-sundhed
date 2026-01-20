@@ -124,20 +124,23 @@ class _FeedbackViewState extends State<FeedbackView> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    viewModel.stopRun();
-                    Navigator.pushNamed(context, '/history');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 16),
-                    backgroundColor: Colors.black.withOpacity(0.7),
-                  ),
-                  child: const Text(
-                    'Stop Run',
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
+  onPressed: () async {
+    // 🔹 Vent på at run er stoppet og gemt
+    await viewModel.stopRun();
+
+    // 🔹 Naviger først efter gemning
+    Navigator.pushReplacementNamed(context, '/history');
+  },
+  style: ElevatedButton.styleFrom(
+    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+    backgroundColor: Colors.black.withOpacity(0.7),
+  ),
+  child: const Text(
+    'Stop Run',
+    style: TextStyle(fontSize: 20, color: Colors.white),
+  ),
+)
+
               ],
             ),
           ),

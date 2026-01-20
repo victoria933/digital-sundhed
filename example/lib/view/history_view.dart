@@ -1,127 +1,86 @@
 import 'package:flutter/material.dart';
 import '../view_model/history_view_model.dart';
+import 'home_view.dart';
 
-class HistoryView extends StatelessWidget {
+class HistoryView extends StatefulWidget {
+  const HistoryView({super.key});
+
+  @override
+  State<HistoryView> createState() => _HistoryViewState();
+}
+
+class _HistoryViewState extends State<HistoryView> {
   final HistoryViewModel viewModel = HistoryViewModel();
 
   @override
+  void initState() {
+    super.initState();
+    viewModel.loadRuns();
+    viewModel.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    viewModel.removeListener(() {});
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final history = viewModel.getHistory();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Historik'),
-        automaticallyImplyLeading: false, // fjern tilbage-pil
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return WillPopScope(
+      onWillPop: () async => false, // 🔹 blokér tilbage-knap
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Historik'),
+          automaticallyImplyLeading: false, // 🔹 fjern back-pil
+        ),
+        body: Column(
           children: [
-
-            // ===== HEADER =====
-            Table(
-              columnWidths: const {
-                0: FlexColumnWidth(2),   // Dato
-                1: FlexColumnWidth(2),   // Tid
-                2: FlexColumnWidth(2),   // Distance
-                3: FlexColumnWidth(1.5), // Zone
-                4: FixedColumnWidth(48), // menu
-              },
-              children: const [
-                TableRow(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Dato', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Tid', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Distance', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Zone', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    SizedBox(),
-                  ],
-                ),
-              ],
-            ),
-
-            const Divider(),
-
-            // ===== DATA =====
             Expanded(
-              child: ListView.builder(
-                itemCount: history.length,
-                itemBuilder: (context, index) {
-                  final run = history[index];
+              child: viewModel.runs.isEmpty
+                  ? const Center(child: Text('Ingen runs endnu'))
+                  : ListView.builder(
+                      itemCount: viewModel.runs.length,
+                      itemBuilder: (context, index) {
+                        final run = viewModel.runs[index];
+                        final elapsedSec = run['elapsed'] as int;
+                        final minutes =
+                            (elapsedSec ~/ 60).toString().padLeft(2, '0');
+                        final seconds =
+                            (elapsedSec % 60).toString().padLeft(2, '0');
+                        final distance = run['distance'] as double;
+                        final avgHr = run['averageHr'] as int;
+                        final zone = run['zone'] as int;
 
-                  return Table(
-                    columnWidths: const {
-                      0: FlexColumnWidth(2),
-                      1: FlexColumnWidth(2),
-                      2: FlexColumnWidth(2),
-                      3: FlexColumnWidth(1.5),
-                      4: FixedColumnWidth(48),
-                    },
-                    children: [
-                      TableRow(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text('${run.date.day}/${run.date.month}'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text('${run.duration.inMinutes} min'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text('${run.distance.toStringAsFixed(2)} km'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text('${run.zone}'),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.more_horiz),
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/details',
-                                arguments: run,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
+                        final runNumber = viewModel.runs.length - index; 
+
+                        return ListTile(
+                          title: Text(
+                              '#$runNumber | Distance: ${distance.toStringAsFixed(1)} m | Zone: $zone'),
+                          subtitle:
+                              Text('Tid: $minutes:$seconds | Puls: $avgHr bpm'),
+                        );
+                      },
+                    ),
             ),
 
-            // ===== HOME KNAP =====
+            // 🔹 Home-knap i bunden
             Padding(
-              padding: const EdgeInsets.only(top: 16.0),
+              padding: const EdgeInsets.all(16.0),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    '/',
-                    (route) => false, // fjerner alle tidligere routes
+                    MaterialPageRoute(builder: (_) => const HomeView()),
+                    (route) => false,
                   );
                 },
                 icon: const Icon(Icons.home),
                 label: const Text('Home'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  textStyle: const TextStyle(fontSize: 18),
+                  minimumSize: const Size.fromHeight(50),
                 ),
               ),
             ),
@@ -131,5 +90,7 @@ class HistoryView extends StatelessWidget {
     );
   }
 }
+
+
 
 
