@@ -1,4 +1,4 @@
-# mdsflutter_example
+# Zoneløb
 
 Demonstrates how to use the mdsflutter plugin.
 
