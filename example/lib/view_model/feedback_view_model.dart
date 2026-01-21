@@ -20,7 +20,9 @@ class FeedbackViewModel extends ChangeNotifier {
   Timer? _timer;
   final List<int> _hrSamples = [];
   DateTime? _runStartTime;
-  bool _gpsReady = false; // ⭐⭐⭐ DEN MANGLEDE
+  bool _gpsReady = false; 
+  int? _currentRunId; // Gemmer runId mens run kører
+
 
 
   Duration get elapsed => _stopwatch.elapsed;
@@ -170,8 +172,12 @@ void _updateDistance(Position position) {
     return true;
   }
 
-void startRun(String uuid) {
-  _runStartTime = DateTime.now(); // ⭐⭐ DEN MANGLEDE
+
+
+
+
+Future<void> startRun(String uuid) async {
+  _runStartTime = DateTime.now();
 
   _hrSamples.clear();
   totalDistance = 0.0;
@@ -188,7 +194,35 @@ void startRun(String uuid) {
 
   sensorData.start(uuid);
   _startGPSTracking();
+
+  //  Initialiser storage og opret run (placeholder values)
+  final storage = RunStorage();
+  await storage.init();
+
+  _currentRunId = await storage.addRun(
+    elapsedSeconds: 0,
+    averageHr: 0,
+    distanceMeters: 0,
+    zone: selectedZone,
+  );
+
+  // 🔹 Lyt til puls og gem hvert slag
+  _hrSub?.cancel(); // sørg for ikke at have flere subscriptions
+  _hrSub = sensorData.hrStream.listen((hr) async {
+    _currentHr = hr;
+    _hrSamples.add(hr);
+
+    // Gem hvert pulsslag med timestamp
+    if (_currentRunId != null) {
+      await storage.addPulse(_currentRunId!, hr);
+    }
+
+    _updateFeedback(hr);
+    notifyListeners();
+  });
 }
+
+
 
 
 Future<void> stopRun() async {
@@ -197,20 +231,22 @@ Future<void> stopRun() async {
   sensorData.stop();
   _stopGPSTracking();
 
-  final avgHr = _calculateAverageHr(); // ⭐
+  final avgHr = _calculateAverageHr();
 
   final storage = RunStorage();
   await storage.init();
 
-  await storage.addRun(
-    elapsedSeconds: _stopwatch.elapsed.inSeconds,
-    averageHr: avgHr,              
-    distanceMeters: totalDistance,
-    zone: selectedZone,
-  );
+  if (_currentRunId != null) {
+    await storage.updateRun(_currentRunId!, {
+      'elapsed': _stopwatch.elapsed.inSeconds,
+      'averageHr': avgHr,
+      'distance': totalDistance,
+    });
+  }
 
   notifyListeners();
 }
+
 
   @override
   void dispose() {

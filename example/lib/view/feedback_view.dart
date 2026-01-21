@@ -46,7 +46,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         final feedback = viewModel.currentFeedback;
         final hr = viewModel.currentHr;
         final elapsed = viewModel.elapsed;
-        final distance = viewModel.totalDistance; // 🔹 Distance i meter
+        final distance = viewModel.totalDistance; // Distance i meter
 
         String text;
         Color color;

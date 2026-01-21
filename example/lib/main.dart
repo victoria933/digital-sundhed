@@ -3,7 +3,6 @@ import 'view/home_view.dart';
 import 'view/start_run_view.dart';
 import 'view/history_view.dart';
 import 'view/sensor_view.dart'; 
-import 'view/details_view.dart';
 import 'view/feedback_view.dart';
 
 
@@ -31,7 +30,7 @@ class ZoneLoebApp extends StatelessWidget {
         '/start-run': (context) => const StartRunView(),
         '/history': (context) =>  HistoryView(),
         '/sensor': (context) => const SensorView(), 
-        '/details': (context) => const DetailsView(),
+
 '/feedback': (context) {
   final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
   final selectedZone = args['selectedZone'] as int;
