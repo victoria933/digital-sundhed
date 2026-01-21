@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import '../data/storage.dart';
 
+
 class HistoryViewModel extends ChangeNotifier {
+  final RunStorage _storage = RunStorage();
+
   List<Map<String, dynamic>> runs = [];
+  bool isLoading = false;
 
-Future<void> loadRuns() async {
-  final allRuns = await RunStorage().getRuns();
+  Future<void> loadRuns() async {
+    isLoading = true;
+    notifyListeners();
 
-  // Sortér efter timestamp faldende til  nyeste først
-  runs = allRuns..sort((a, b) => (b['timestamp'] as int).compareTo(a['timestamp'] as int));
+    // Henter allerede sorteret fra storage
+    runs = await _storage.getAllRuns();
 
-  notifyListeners();
-}
+    // Nyeste først (valgfrit – fjern hvis du vil have ældste først)
+    runs = runs.reversed.toList();
+
+    isLoading = false;
+    notifyListeners();
+  }
 }
 
 

@@ -4,8 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import '../model/sensor_data.dart';
 import '../data/storage.dart';
 
-
-
 enum RunFeedback { slowDown, keepPace, speedUp }
 
 class PulseZone {
@@ -21,6 +19,9 @@ class FeedbackViewModel extends ChangeNotifier {
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
   final List<int> _hrSamples = [];
+  DateTime? _runStartTime;
+  bool _gpsReady = false; // ⭐⭐⭐ DEN MANGLEDE
+
 
   Duration get elapsed => _stopwatch.elapsed;
   int _currentHr = 0;
@@ -78,10 +79,7 @@ Future<void> _startGPSTracking() async {
   final ok = await _handleLocationPermission();
   if (!ok) return;
 
-  // ⭐ FØRSTE FIX
-  _lastPosition = await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.bestForNavigation,
-  );
+  _lastPosition = null; 
 
   _positionStream = Geolocator.getPositionStream(
     locationSettings: const LocationSettings(
@@ -98,25 +96,57 @@ Future<void> _startGPSTracking() async {
     _lastPosition = null;
   }
 
+static const double minNoiseDistance = 10.0; // meter
+static const int noiseIgnoreSeconds = 5;
+
+static const int warmupSeconds = 10;
+static const double minMoveDistance = 8.0;
+
 void _updateDistance(Position position) {
-  debugPrint(
-    'GPS: ${position.latitude}, ${position.longitude}'
+  if (_runStartTime == null) return;
+
+  final secondsSinceStart =
+      DateTime.now().difference(_runStartTime!).inSeconds;
+
+  // ⭐ Sæt startpunkt én gang
+  if (_lastPosition == null) {
+    _lastPosition = position;
+    debugPrint('Start GPS point sat');
+    return;
+  }
+
+  final d = Geolocator.distanceBetween(
+    _lastPosition!.latitude,
+    _lastPosition!.longitude,
+    position.latitude,
+    position.longitude,
   );
 
-  if (_lastPosition != null) {
-    final d = Geolocator.distanceBetween(
-      _lastPosition!.latitude,
-      _lastPosition!.longitude,
-      position.latitude,
-      position.longitude,
-    );
-    totalDistance += d;
-    debugPrint('Δ distance: $d m');
+  // 🛑 WARMUP-PERIODE
+  if (!_gpsReady) {
+    if (secondsSinceStart < warmupSeconds || d < minMoveDistance) {
+      debugPrint('GPS warmup – ignoring: $d m');
+      return; // ❗ VIGTIGT: vi flytter IKKE lastPosition
+    }
+
+    // ✅ GPS er nu stabil
+    _gpsReady = true;
+    debugPrint('GPS ready – start tracking');
+    _lastPosition = position;
+    return;
   }
+
+  // ✅ NORMAL TRACKING
+  totalDistance += d;
+  debugPrint('Δ distance: $d m | Total: $totalDistance m');
 
   _lastPosition = position;
   notifyListeners();
 }
+
+
+
+
 
 
   int _calculateAverageHr() {
@@ -125,7 +155,6 @@ void _updateDistance(Position position) {
   final sum = _hrSamples.reduce((a, b) => a + b);
   return (sum / _hrSamples.length).round();
 }
-
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -141,23 +170,26 @@ void _updateDistance(Position position) {
     return true;
   }
 
-  void startRun(String uuid) {
-      _hrSamples.clear(); 
-    totalDistance = 0.0;      
-    _lastPosition = null;     
+void startRun(String uuid) {
+  _runStartTime = DateTime.now(); // ⭐⭐ DEN MANGLEDE
 
-    _stopwatch
-      ..reset()
-      ..start();
+  _hrSamples.clear();
+  totalDistance = 0.0;
+  _lastPosition = null;
 
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      notifyListeners();
-    });
+  _stopwatch
+    ..reset()
+    ..start();
 
-    sensorData.start(uuid);
-    _startGPSTracking();
-  }
+  _timer?.cancel();
+  _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    notifyListeners();
+  });
+
+  sensorData.start(uuid);
+  _startGPSTracking();
+}
+
 
 Future<void> stopRun() async {
   _stopwatch.stop();

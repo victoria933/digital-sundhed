@@ -11,86 +11,84 @@ class HistoryView extends StatefulWidget {
 
 class _HistoryViewState extends State<HistoryView> {
   final HistoryViewModel viewModel = HistoryViewModel();
+  late final VoidCallback _listener;
 
   @override
   void initState() {
     super.initState();
+
+    _listener = () {
+      if (mounted) setState(() {});
+    };
+
+    viewModel.addListener(_listener);
     viewModel.loadRuns();
-    viewModel.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
-    viewModel.removeListener(() {});
+    viewModel.removeListener(_listener);
+    viewModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false, // 🔹 blokér tilbage-knap
+      onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Historik'),
-          automaticallyImplyLeading: false, // 🔹 fjern back-pil
+          automaticallyImplyLeading: false,
         ),
         body: Column(
           children: [
             Expanded(
-              child: viewModel.runs.isEmpty
-                  ? const Center(child: Text('Ingen runs endnu'))
-                  : ListView.builder(
-                      itemCount: viewModel.runs.length,
-                      itemBuilder: (context, index) {
-                        final run = viewModel.runs[index];
-                        final elapsedSec = run['elapsed'] as int;
-                        final minutes =
-                            (elapsedSec ~/ 60).toString().padLeft(2, '0');
-                        final seconds =
-                            (elapsedSec % 60).toString().padLeft(2, '0');
-                        final distance = run['distance'] as double;
-                        final avgHr = run['averageHr'] as int;
-                        final zone = run['zone'] as int;
+              child: viewModel.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : viewModel.runs.isEmpty
+                      ? const Center(child: Text('Ingen runs endnu'))
+                      : ListView.builder(
+                          itemCount: viewModel.runs.length,
+                          itemBuilder: (context, index) {
+                            final run = viewModel.runs[index];
+                            final elapsed = run['elapsed'] as int;
+                            final min =
+                                (elapsed ~/ 60).toString().padLeft(2, '0');
+                            final sec =
+                                (elapsed % 60).toString().padLeft(2, '0');
 
-                        final runNumber = viewModel.runs.length - index; 
-
-                        return ListTile(
-                          title: Text(
-                              '#$runNumber | Distance: ${distance.toStringAsFixed(1)} m | Zone: $zone'),
-                          subtitle:
-                              Text('Tid: $minutes:$seconds | Puls: $avgHr bpm'),
-                        );
-                      },
-                    ),
+                            return ListTile(
+                              title: Text(
+                                'Distance: ${run['distance'].toStringAsFixed(1)} m | Zone ${run['zone']}',
+                              ),
+                              subtitle: Text(
+                                'Tid: $min:$sec | Puls: ${run['averageHr']} bpm',
+                              ),
+                            );
+                          },
+                        ),
             ),
-
-            // 🔹 Home-knap i bunden
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => const HomeView()),
-                    (route) => false,
+                    (_) => false,
                   );
                 },
                 icon: const Icon(Icons.home),
                 label: const Text('Home'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 }
-
 
 
 
