@@ -42,4 +42,3 @@ class DumpManager {
     print('Pulses dumpet som JSON til: $filePath');
   }
 }
-

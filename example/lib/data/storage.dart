@@ -95,8 +95,4 @@ class RunStorage {
     final pulses = await getPulses(runId);
     return jsonEncode(pulses);
   }
-
 }
-
-
-

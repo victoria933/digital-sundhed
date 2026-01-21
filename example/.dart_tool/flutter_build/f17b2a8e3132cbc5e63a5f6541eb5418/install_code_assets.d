@@ -1,0 +1,1 @@
+ /Users/carolineringbaek/digital-sundhed-1/example/.dart_tool/flutter_build/f17b2a8e3132cbc5e63a5f6541eb5418/native_assets.json: 

@@ -3,15 +3,15 @@ import '../view_model/feedback_view_model.dart';
 import '../model/sensor_data.dart';
 
 class FeedbackView extends StatefulWidget {
-  final int selectedZone;   // Valgt pulszone
+  final int selectedZone; // Valgt pulszone
   final String sensorUuid; // Movesense sensor-ID
-  final int age;          // Brugerens alder
+  final int age; // Brugerens alder
 
   const FeedbackView({
     super.key,
     required this.selectedZone,
     required this.sensorUuid,
-    required this.age, 
+    required this.age,
   });
 
   @override
@@ -25,7 +25,7 @@ class _FeedbackViewState extends State<FeedbackView> {
   void initState() {
     super.initState();
 
-    // Opret ViewModel 
+    // Opret ViewModel
     viewModel = FeedbackViewModel(
       sensorData: SensorData(),
       selectedZone: widget.selectedZone,
@@ -49,7 +49,7 @@ class _FeedbackViewState extends State<FeedbackView> {
         final feedback = viewModel.currentFeedback;
         final hr = viewModel.currentHr;
         final elapsed = viewModel.elapsed;
-        final distance = viewModel.totalDistance; 
+        final distance = viewModel.totalDistance;
 
 // Bestem tekst, farve og ikon ud fra feedback
         String text;
@@ -58,7 +58,7 @@ class _FeedbackViewState extends State<FeedbackView> {
 
         switch (feedback) {
           case RunFeedback.speedUp:
-            text = 'Speed up';
+            text = 'Løb hurtigere';
             color = const Color.fromARGB(255, 238, 96, 200);
             icon = Icons.trending_up;
             break;
@@ -95,7 +95,7 @@ class _FeedbackViewState extends State<FeedbackView> {
 
                 // Puls
                 Text(
-                  'Pulse: $hr bpm',
+                  'Puls: $hr bpm',
                   style: const TextStyle(fontSize: 24, color: Colors.white),
                 ),
 
@@ -128,23 +128,23 @@ class _FeedbackViewState extends State<FeedbackView> {
                   ),
                 ),
                 ElevatedButton(
-  onPressed: () async {
-    // 🔹 Vent på at run er stoppet og gemt
-    await viewModel.stopRun();
+                  onPressed: () async {
+                    // Vent på at run er stoppet og gemt
+                    await viewModel.stopRun();
 
-    // 🔹 Naviger først efter gemning
-    Navigator.pushReplacementNamed(context, '/history');
-  },
-  style: ElevatedButton.styleFrom(
-    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-    backgroundColor: Colors.black.withOpacity(0.7),
-  ),
-  child: const Text(
-    'Stop Run',
-    style: TextStyle(fontSize: 20, color: Colors.white),
-  ),
-)
-
+                    // Naviger først efter gemning
+                    Navigator.pushReplacementNamed(context, '/history');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 16),
+                    backgroundColor: Colors.black.withOpacity(0.7),
+                  ),
+                  child: const Text(
+                    'Stop løb',
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                )
               ],
             ),
           ),

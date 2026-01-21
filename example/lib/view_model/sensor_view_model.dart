@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'dart:async'; 
+import 'dart:async';
 
 enum SensorState {
   idle,
@@ -10,7 +10,6 @@ enum SensorState {
   disconnected,
   error,
 }
-
 
 class SensorViewModel {
   //  Singleton
@@ -26,33 +25,31 @@ class SensorViewModel {
       ValueNotifier(SensorState.idle);
 
   //  Scan efter Movesense
-void scan(Function(String uuid) onFound) {
-  stateNotifier.value = SensorState.scanning;
+  void scan(Function(String uuid) onFound) {
+    stateNotifier.value = SensorState.scanning;
 
-  // Gem subscription, så vi kan stoppe scanningen
-  late StreamSubscription subscription;
-  subscription = ble.scanForDevices(withServices: []).listen((device) {
-    if (device.name.contains("Movesense")) {
-      moveSenseDevice = device;
-      onFound(device.id);          // fylder UUID i UI
-      stateNotifier.value = SensorState.idle;
-      
-      // Stop scanningen efter første Movesense
-      subscription.cancel();
-    }
-  }, onError: (_) {
-    stateNotifier.value = SensorState.error;
-  });
-}
+    // Gem subscription, så vi kan stoppe scanningen
+    late StreamSubscription subscription;
+    subscription = ble.scanForDevices(withServices: []).listen((device) {
+      if (device.name.contains("Movesense")) {
+        moveSenseDevice = device;
+        onFound(device.id); // fylder UUID i UI
+        stateNotifier.value = SensorState.idle;
 
+        // Stop scanningen efter første Movesense
+        subscription.cancel();
+      }
+    }, onError: (_) {
+      stateNotifier.value = SensorState.error;
+    });
+  }
 
   // Connect via UUID
   void connectById(String id) {
     stateNotifier.value = SensorState.connecting;
 
     ble.connectToDevice(id: id).listen((connectionState) {
-      if (connectionState.connectionState ==
-          DeviceConnectionState.connected) {
+      if (connectionState.connectionState == DeviceConnectionState.connected) {
         stateNotifier.value = SensorState.connected;
       } else if (connectionState.connectionState ==
           DeviceConnectionState.disconnected) {
@@ -69,4 +66,3 @@ void scan(Function(String uuid) onFound) {
 
   String? get uuid => moveSenseDevice?.id;
 }
-

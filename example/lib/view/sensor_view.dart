@@ -16,9 +16,24 @@ class _SensorViewState extends State<SensorView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sensor"),
+        backgroundColor: Colors.orangeAccent,
         centerTitle: true,
         toolbarHeight: 100,
+
+        //  Tilbage-pil
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+
+        title: const Text(
+          "Sensor",
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -37,7 +52,7 @@ class _SensorViewState extends State<SensorView> {
 
             const SizedBox(height: 20),
 
-            //Status baseret på SensorState
+            // Status baseret på SensorState
             ValueListenableBuilder<SensorState>(
               valueListenable: viewModel.stateNotifier,
               builder: (context, state, _) {
@@ -66,7 +81,7 @@ class _SensorViewState extends State<SensorView> {
                     color = Colors.red;
                     break;
                   default:
-                    text = "Idle";
+                    text = "Inaktiv";
                     color = Colors.black;
                 }
 
@@ -82,9 +97,12 @@ class _SensorViewState extends State<SensorView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                //Scan-knap
+                // Scan-knap
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.search),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black, //  sort tekst
+                  ),
+                  icon: const Icon(Icons.search, color: Colors.black),
                   label: const Text("Scan"),
                   onPressed: () {
                     viewModel.scan((uuid) {
@@ -95,21 +113,26 @@ class _SensorViewState extends State<SensorView> {
                   },
                 ),
 
-                //Connect / Disconnect-knap
+                // Forbind / Afbryd-knap
                 ValueListenableBuilder<SensorState>(
                   valueListenable: viewModel.stateNotifier,
                   builder: (context, state, _) {
                     final isConnected = state == SensorState.connected;
 
                     return ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black, //  sort tekst
+                      ),
                       icon: Icon(
                         isConnected
                             ? Icons.bluetooth_disabled
                             : Icons.bluetooth_connected,
+                        color: Colors.black,
                       ),
-                      label: Text(isConnected ? "Disconnect" : "Connect"),
+                      label: Text(isConnected ? "Afbryd" : "Forbind"),
                       onPressed: () {
                         final uuid = idController.text.trim();
+
                         if (isConnected) {
                           viewModel.disconnect();
                         } else if (uuid.isNotEmpty) {
@@ -127,6 +150,3 @@ class _SensorViewState extends State<SensorView> {
     );
   }
 }
-
-
-

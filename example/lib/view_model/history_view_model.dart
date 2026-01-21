@@ -21,6 +21,3 @@ class HistoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-

@@ -1,4 +1,3 @@
-
 class StartRunViewModel {
   // Liste over zoner
   final List<String> zones = [
@@ -21,7 +20,7 @@ class StartRunViewModel {
   String? get selectedZone =>
       selectedZoneIndex != null ? zones[selectedZoneIndex!] : null;
 
-  // Start run 
+  // Start run
   void startRun() {
     if (selectedZone != null) {
       print('Starter løb i: $selectedZone');
