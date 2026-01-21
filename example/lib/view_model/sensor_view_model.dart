@@ -46,7 +46,7 @@ void scan(Function(String uuid) onFound) {
 }
 
 
-  // 🔹 Connect via UUID
+  // Connect via UUID
   void connectById(String id) {
     stateNotifier.value = SensorState.connecting;
 

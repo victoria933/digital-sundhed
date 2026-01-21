@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../view_model/history_view_model.dart';
 import 'home_view.dart';
 
+/// Viser en liste over tidligere løb (tid, puls, distance, zone).
 class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
 
@@ -17,16 +18,21 @@ class _HistoryViewState extends State<HistoryView> {
   void initState() {
     super.initState();
 
+// Opdater UI når ViewModel ændrer sig
     _listener = () {
       if (mounted) setState(() {});
     };
 
     viewModel.addListener(_listener);
+
+    // Hent alle runs fra databasen
     viewModel.loadRuns();
   }
 
   @override
   void dispose() {
+    // Fjern lytter og ryd op
+  
     viewModel.removeListener(_listener);
     viewModel.dispose();
     super.dispose();

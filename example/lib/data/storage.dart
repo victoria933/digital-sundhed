@@ -22,7 +22,7 @@ class RunStorage {
 
   bool _initialized = false;
 
-  /// Initialiserer databasen (skal kaldes én gang)
+  // Initialiserer databasen (skal kaldes én gang)
   Future<void> init() async {
     if (_initialized) return;
     final dir = await getApplicationDocumentsDirectory();
@@ -31,7 +31,7 @@ class RunStorage {
     _initialized = true;
   }
 
-  /// Gemmer ét run i databasen og returnerer runId
+  // Gemmer ét run i databasen og returnerer runId
   Future<int> addRun({
     required int elapsedSeconds,
     required int averageHr,
@@ -48,18 +48,18 @@ class RunStorage {
     return await _store.add(_database, data);
   }
 
-  /// Hent et specifikt run ud fra runId
+  // Hent et specifikt run ud fra runId
   Future<Map<String, dynamic>?> getRun(int runId) async {
     final record = await _store.record(runId).get(_database);
     return record; // null hvis ikke fundet
   }
 
-  /// Opdater run (fx når run stopper)
+  // Opdater run (fx når run stopper)
   Future<void> updateRun(int runId, Map<String, dynamic> newData) async {
     await _store.record(runId).update(_database, newData);
   }
 
-  /// Gemmer ét pulsslag som {timestamp, hr} under runId
+  // Gemmer ét pulsslag som {timestamp, hr} under runId
   Future<int> addPulse(int runId, int hr) async {
     final data = {
       'runId': runId,
@@ -69,7 +69,7 @@ class RunStorage {
     return await _pulseStore.add(_database, data);
   }
 
-  /// Hent alle pulsslag for et specifikt run
+  // Hent alle pulsslag for et specifikt run
   Future<List<Map<String, dynamic>>> getPulses(int runId) async {
     final snapshots = await _pulseStore.find(
       _database,
@@ -81,7 +81,7 @@ class RunStorage {
     return snapshots.map((s) => s.value).toList();
   }
 
-  /// Hent alle runs (sorteret efter tid)
+  // Hent alle runs (sorteret efter tid)
   Future<List<Map<String, dynamic>>> getAllRuns() async {
     final snapshots = await _store.find(
       _database,
@@ -90,7 +90,7 @@ class RunStorage {
     return snapshots.map((s) => s.value).toList();
   }
 
-  /// Eksporter pulsslag som JSON (timestamp, hr)
+  // Eksporter pulsslag som JSON (timestamp, hr)
   Future<String> exportPulsesAsJson(int runId) async {
     final pulses = await getPulses(runId);
     return jsonEncode(pulses);

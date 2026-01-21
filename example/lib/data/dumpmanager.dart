@@ -10,7 +10,7 @@ class DumpManager {
 
   DumpManager(this.storage);
 
-  /// Dump pulsslag for runId til JSON-fil med kun timestamp og hr
+  // Dump pulsslag for runId til JSON-fil med timestamp og hr
   Future<void> dumpPulses(int runId) async {
     await storage.init();
 

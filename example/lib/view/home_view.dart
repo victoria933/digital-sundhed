@@ -13,12 +13,14 @@ class _HomeViewState extends State<HomeView> {
   final SensorViewModel sensorViewModel = SensorViewModel();
   final TextEditingController ageController = TextEditingController();
 
+// Tjekker om alderen er gyldig
   bool get isAgeValid {
     final text = ageController.text;
     final age = int.tryParse(text);
     return age != null && age > 0 && age <= 120;
   }
 
+// Fejlbesked til alder-feltet
   String? get ageError {
     final text = ageController.text;
     if (text.isEmpty) return 'Indtast din alder';
@@ -35,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    resizeToAvoidBottomInset: true, // ⚡ Flytter body når keyboard vises
+    resizeToAvoidBottomInset: true, //  Flyt UI når keyboard åbner
     appBar: AppBar(
       backgroundColor: Colors.orangeAccent,
       centerTitle: true,
@@ -49,13 +51,13 @@ Widget build(BuildContext context) {
       ),
     ),
     body: GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(), // ⚡ skjul keyboard når man tapper udenfor
+      onTap: () => FocusScope.of(context).unfocus(), //  Skjul keyboard ved tap
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Column(
           children: [
             
-            // 🔹 Bluetooth status
+            // Bluetooth status
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
               child: Row(
@@ -81,7 +83,7 @@ Widget build(BuildContext context) {
             
 
             const SizedBox(height: 45),
-
+// Info-tekst om alder
       const Text(
         'Alder kræves for at beregne dine pulszoner',
         style: TextStyle(
@@ -93,7 +95,7 @@ Widget build(BuildContext context) {
 
                   const SizedBox(height: 20),
 
-              // 🔹 Alders-input
+              // Alders-input
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
@@ -107,10 +109,10 @@ Widget build(BuildContext context) {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (_) {
-                        // Trigger rebuild for knap-status
-                        setState(() {});
+                        setState(() {}); // Opdater knap-status
                       },
                     ),
+                    // Fejlbesked hvis alder er ugyldig
                     if (ageError != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -125,7 +127,7 @@ Widget build(BuildContext context) {
 
             const SizedBox(height: 70),
 
-            // 🔹 Sensor-knap
+            // Knap til at forbinde sensor
             Center(
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.sensors, size: 28),
@@ -149,7 +151,7 @@ Widget build(BuildContext context) {
 
             const SizedBox(height: 20),
 
-              // 🔹 Start Run-knap
+              // Start løb-knap
               ElevatedButton.icon(
                 icon: const Icon(Icons.directions_run, size: 28),
                 label: const Text(
@@ -175,12 +177,12 @@ Widget build(BuildContext context) {
                           arguments: {'age': age},
                         );
                       }
-                    : null, // ✅ helt deaktiveret
+                    : null, // Deaktiveret hvis alder er ugyldig
               ),
 
             const SizedBox(height: 90),
 
-            // 🔹 History-knap
+            // Historik-knap
             Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
               child: Center(

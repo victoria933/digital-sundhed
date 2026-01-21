@@ -3,9 +3,9 @@ import '../view_model/feedback_view_model.dart';
 import '../model/sensor_data.dart';
 
 class FeedbackView extends StatefulWidget {
-  final int selectedZone;
-  final String sensorUuid; // UUID på Movesense
-  final int age; 
+  final int selectedZone;   // Valgt pulszone
+  final String sensorUuid; // Movesense sensor-ID
+  final int age;          // Brugerens alder
 
   const FeedbackView({
     super.key,
@@ -24,6 +24,8 @@ class _FeedbackViewState extends State<FeedbackView> {
   @override
   void initState() {
     super.initState();
+
+    // Opret ViewModel 
     viewModel = FeedbackViewModel(
       sensorData: SensorData(),
       selectedZone: widget.selectedZone,
@@ -34,6 +36,7 @@ class _FeedbackViewState extends State<FeedbackView> {
 
   @override
   void dispose() {
+    // Stop alt når view lukkes
     viewModel.dispose();
     super.dispose();
   }
@@ -41,13 +44,14 @@ class _FeedbackViewState extends State<FeedbackView> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: viewModel,
+      animation: viewModel, // UI opdateres når ViewModel ændrer sig
       builder: (context, _) {
         final feedback = viewModel.currentFeedback;
         final hr = viewModel.currentHr;
         final elapsed = viewModel.elapsed;
-        final distance = viewModel.totalDistance; // Distance i meter
+        final distance = viewModel.totalDistance; 
 
+// Bestem tekst, farve og ikon ud fra feedback
         String text;
         Color color;
         IconData icon;
@@ -156,8 +160,3 @@ class _FeedbackViewState extends State<FeedbackView> {
     return '$minutes:$seconds';
   }
 }
-
-
-
-
-
