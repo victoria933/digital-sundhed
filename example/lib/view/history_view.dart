@@ -49,25 +49,27 @@ class _HistoryViewState extends State<HistoryView> {
                   : viewModel.runs.isEmpty
                       ? const Center(child: Text('Ingen runs endnu'))
                       : ListView.builder(
-                          itemCount: viewModel.runs.length,
-                          itemBuilder: (context, index) {
-                            final run = viewModel.runs[index];
-                            final elapsed = run['elapsed'] as int;
-                            final min =
-                                (elapsed ~/ 60).toString().padLeft(2, '0');
-                            final sec =
-                                (elapsed % 60).toString().padLeft(2, '0');
+  itemCount: viewModel.runs.length,
+  itemBuilder: (context, index) {
+    final run = viewModel.runs[index];
+    final elapsed = run['elapsed'] as int;
+    final min = (elapsed ~/ 60).toString().padLeft(2, '0');
+    final sec = (elapsed % 60).toString().padLeft(2, '0');
 
-                            return ListTile(
-                              title: Text(
-                                'Distance: ${run['distance'].toStringAsFixed(1)} m | Zone ${run['zone']}',
-                              ),
-                              subtitle: Text(
-                                'Tid: $min:$sec | Puls: ${run['averageHr']} bpm',
-                              ),
-                            );
-                          },
-                        ),
+    // Ældste = #1, nyeste = #N
+    final runNumber = viewModel.runs.length - index;
+
+    return ListTile(
+      title: Text(
+        '#$runNumber | Distance: ${run['distance'].toStringAsFixed(1)} m | Zone ${run['zone']}',
+      ),
+      subtitle: Text(
+        'Tid: $min:$sec | Puls: ${run['averageHr']} bpm',
+      ),
+    );
+  },
+),
+
             ),
             Padding(
               padding: const EdgeInsets.all(16),

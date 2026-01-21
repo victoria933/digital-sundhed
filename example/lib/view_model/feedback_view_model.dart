@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import '../model/sensor_data.dart';
 import '../data/storage.dart';
+import '../data/dumpmanager.dart';
 
 enum RunFeedback { slowDown, keepPace, speedUp }
 
@@ -22,7 +23,6 @@ class FeedbackViewModel extends ChangeNotifier {
   DateTime? _runStartTime;
   bool _gpsReady = false; 
   int? _currentRunId; // Gemmer runId mens run kører
-
 
 
   Duration get elapsed => _stopwatch.elapsed;
@@ -110,7 +110,7 @@ void _updateDistance(Position position) {
   final secondsSinceStart =
       DateTime.now().difference(_runStartTime!).inSeconds;
 
-  // ⭐ Sæt startpunkt én gang
+  //  Sæt startpunkt én gang
   if (_lastPosition == null) {
     _lastPosition = position;
     debugPrint('Start GPS point sat');
@@ -124,21 +124,21 @@ void _updateDistance(Position position) {
     position.longitude,
   );
 
-  // 🛑 WARMUP-PERIODE
+  //  WARMUP-PERIODE
   if (!_gpsReady) {
     if (secondsSinceStart < warmupSeconds || d < minMoveDistance) {
       debugPrint('GPS warmup – ignoring: $d m');
-      return; // ❗ VIGTIGT: vi flytter IKKE lastPosition
+      return; //  VIGTIGT: vi flytter IKKE lastPosition
     }
 
-    // ✅ GPS er nu stabil
+    //  GPS er nu stabil
     _gpsReady = true;
     debugPrint('GPS ready – start tracking');
     _lastPosition = position;
     return;
   }
 
-  // ✅ NORMAL TRACKING
+  //  NORMAL TRACKING
   totalDistance += d;
   debugPrint('Δ distance: $d m | Total: $totalDistance m');
 
@@ -174,8 +174,6 @@ void _updateDistance(Position position) {
 
 
 
-
-
 Future<void> startRun(String uuid) async {
   _runStartTime = DateTime.now();
 
@@ -206,7 +204,7 @@ Future<void> startRun(String uuid) async {
     zone: selectedZone,
   );
 
-  // 🔹 Lyt til puls og gem hvert slag
+  //  Lyt til puls og gem hvert slag
   _hrSub?.cancel(); // sørg for ikke at have flere subscriptions
   _hrSub = sensorData.hrStream.listen((hr) async {
     _currentHr = hr;
@@ -223,8 +221,6 @@ Future<void> startRun(String uuid) async {
 }
 
 
-
-
 Future<void> stopRun() async {
   _stopwatch.stop();
   _timer?.cancel();
@@ -237,15 +233,22 @@ Future<void> stopRun() async {
   await storage.init();
 
   if (_currentRunId != null) {
+    // Opdater run med gennemsnit, distance etc.
     await storage.updateRun(_currentRunId!, {
       'elapsed': _stopwatch.elapsed.inSeconds,
       'averageHr': avgHr,
       'distance': totalDistance,
     });
+
+    // Dump pulsslag som JSON med kun timestamp og hr
+    final dumper = DumpManager(storage);
+    await dumper.dumpPulses(_currentRunId!);
   }
 
   notifyListeners();
 }
+
+
 
 
   @override

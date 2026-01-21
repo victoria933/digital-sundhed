@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/storage.dart';
 
-
 class HistoryViewModel extends ChangeNotifier {
   final RunStorage _storage = RunStorage();
 
@@ -12,15 +11,16 @@ class HistoryViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    // Henter allerede sorteret fra storage
+    // Henter alle runs, ældste først
     runs = await _storage.getAllRuns();
 
-    // Nyeste først (valgfrit – fjern hvis du vil have ældste først)
+    // Vend rækkefølgen, så nyeste vises øverst i appen
     runs = runs.reversed.toList();
 
     isLoading = false;
     notifyListeners();
   }
 }
+
 
 

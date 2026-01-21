@@ -5,6 +5,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 class RunStorage {
+  // Singleton
   static final RunStorage _instance = RunStorage._internal();
   factory RunStorage() => _instance;
   RunStorage._internal();
@@ -12,10 +13,12 @@ class RunStorage {
   late final Database _database;
 
   // Store til runs
-  final StoreRef<int, Map<String, dynamic>> _store = intMapStoreFactory.store('runs');
+  final StoreRef<int, Map<String, dynamic>> _store =
+      intMapStoreFactory.store('runs');
 
   // Puls store: hvert pulsslag gemmes som {runId, timestamp, hr}
-  final StoreRef<int, Map<String, dynamic>> _pulseStore = intMapStoreFactory.store('pulses');
+  final StoreRef<int, Map<String, dynamic>> _pulseStore =
+      intMapStoreFactory.store('pulses');
 
   bool _initialized = false;
 
@@ -45,18 +48,29 @@ class RunStorage {
     return await _store.add(_database, data);
   }
 
+  /// Hent et specifikt run ud fra runId
+  Future<Map<String, dynamic>?> getRun(int runId) async {
+    final record = await _store.record(runId).get(_database);
+    return record; // null hvis ikke fundet
+  }
+
+  /// Opdater run (fx når run stopper)
+  Future<void> updateRun(int runId, Map<String, dynamic> newData) async {
+    await _store.record(runId).update(_database, newData);
+  }
+
   /// Gemmer ét pulsslag som {timestamp, hr} under runId
   Future<int> addPulse(int runId, int hr) async {
     final data = {
       'runId': runId,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'hr': hr, // ❤️ kun timestamp og hr
+      'hr': hr, // kun timestamp og hr
     };
     return await _pulseStore.add(_database, data);
   }
 
-  /// Henter alle pulsslag for et run, sorteret efter tid
-  Future<List<Map<String, dynamic>>> getPulsesForRun(int runId) async {
+  /// Hent alle pulsslag for et specifikt run
+  Future<List<Map<String, dynamic>>> getPulses(int runId) async {
     final snapshots = await _pulseStore.find(
       _database,
       finder: Finder(
@@ -67,7 +81,7 @@ class RunStorage {
     return snapshots.map((s) => s.value).toList();
   }
 
-  /// Henter alle runs (sorteret efter tid)
+  /// Hent alle runs (sorteret efter tid)
   Future<List<Map<String, dynamic>>> getAllRuns() async {
     final snapshots = await _store.find(
       _database,
@@ -76,22 +90,13 @@ class RunStorage {
     return snapshots.map((s) => s.value).toList();
   }
 
-  /// Opdater run (fx når run stopper)
-  Future<void> updateRun(int runId, Map<String, dynamic> newData) async {
-    await _store.record(runId).update(_database, newData);
-  }
-
   /// Eksporter pulsslag som JSON (timestamp, hr)
   Future<String> exportPulsesAsJson(int runId) async {
-    final pulses = await getPulsesForRun(runId);
+    final pulses = await getPulses(runId);
     return jsonEncode(pulses);
   }
 
-  /// Sletter alt
-  Future<void> clearAll() async {
-    await _store.delete(_database);
-    await _pulseStore.delete(_database);
-  }
 }
+
 
 
