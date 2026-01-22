@@ -1,4 +1,4 @@
-<img width="590" height="1278" alt="IMG_0481" src="https://github.com/user-attachments/assets/1bbe9c7d-c0ca-4933-b1b8-75cff4722ed3" /># ZoneLøb – Mobil sundhedsteknologi
+# ZoneLøb – Mobil sundhedsteknologi
 
 Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på løbetræning i en konkret pulszone. Der benyttes mobile health i form af Movesense pulsmåler. Under løbet får brugeren feedback løbende og på den måde fortæller brugeren om de er i den rigtige zone. 
 
@@ -13,7 +13,14 @@ Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på l�
 - Eksport af pulsdata som JSON til efterfølgende analyse
 - Historik over tidligere løbeture
 
-  <img width="590" height="1278" alt="IMG_0479" src="https://github.com/user-attachments/assets/8e2421fb-79ca-4409-81ab-3bb2e8edee2f" />
+  <p align="center">
+  <img src="https://github.com/user-attachments/assets/8e2421fb-79ca-4409-81ab-3bb2e8edee2f" width="30%" />
+  <img src="https://github.com/user-attachments/assets/27cd62be-2c7c-43b9-ace0-f94ac0522df5" width="30%" />
+  <img src="https://github.com/user-attachments/assets/b150d75f-e029-4988-a5f3-1fc287918a3c" width="30%" />
+</p>
+
+
+<img width="590" height="1278" alt="IMG_0479" src="https://github.com/user-attachments/assets/8e2421fb-79ca-4409-81ab-3bb2e8edee2f" />
   
 <img width="590" height="1278" alt="IMG_0480" src="https://github.com/user-attachments/assets/27cd62be-2c7c-43b9-ace0-f94ac0522df5" />
 
