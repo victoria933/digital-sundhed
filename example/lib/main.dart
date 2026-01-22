@@ -22,7 +22,7 @@ class ZoneLoebApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 
-      // 🏠 Starter altid her
+      //  Starter altid her
       initialRoute: '/',
 
       routes: {
