@@ -1,6 +1,6 @@
 # ZoneLøb – Mobil sundhedsteknologi
 
-Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på løbe træning i en konkret pulszone. Der benyttes mobile health i form af Movesense pulsmåler. Under løbet får brugere feedback løbende og på den måde fortæller brugeren om de er i den rigtige zone. 
+Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på løbetræning i en konkret pulszone. Der benyttes mobile health i form af Movesense pulsmåler. Under løbet får brugeren feedback løbende og på den måde fortæller brugeren om de er i den rigtige zone. 
 
 ---
 
