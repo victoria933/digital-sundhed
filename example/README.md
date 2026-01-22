@@ -58,11 +58,11 @@ aliteten ligger: ViewModel tager imod brugerens input fra view-laget, benytter d
 - Estimerer makspuls ved at bruge formlen 220 − alder.
 - Makspulsen bruges som udgangspunkt for at beregne pulszoner.
 - Hver zone er et procentinterval af makspulsen
-        - Zone 1 dækker 50–60 %
-        - Zone 2 60–70 %
-        - Zone 3 70–80 %
-        - Zone 4 80–90 % 
-        - Zone 5 90–100 %
+  - **Zone 1:** 50–60 %
+  - **Zone 2:** 60–70 %
+  - **Zone 3:** 70–80 %
+  - **Zone 4:** 80–90 %
+  - **Zone 5:** 90–100 %
 - Minimums- og maksimumspuls for en zone findes ved at gange makspulsen med zonens procentgrænser.
 
 ---
