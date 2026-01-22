@@ -48,6 +48,13 @@ ViewModel-laget fungerer som bindeled mellem view og model. Det er her, funktion
 aliteten ligger: ViewModel tager imod brugerens input fra view-laget, benytter data fra model-laget og sender derefter de korrekte og opdaterede data tilbage til view-laget
 
 ---
+## Zoneberegning
+- Estimerer makspuls ved at bruge formlen 220 − alder.
+- Makspulsen bruges som udgangspunkt for at beregne pulszoner.
+- Hver zone er et procentinterval af makspulsen (fx 50–60 %, 60–70 %, osv.).
+- Minimums- og maksimumspuls for en zone findes ved at gange makspulsen med zonens procentgrænser.
+
+---
 ## Begrænsninger
 - Kun testet på iOS og macOS
 - Android ikke understøttet
