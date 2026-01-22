@@ -1,21 +1,19 @@
-# ZoneLøb
+# ZoneLøb App
 
-Demonstrates how to use the mdsflutter plugin.
+ZoneLøb er en mobilapplikation udviklet i Flutter, der hjælper løbere med at holde sig inden for en valgt pulszone under træning.
 
-## Getting Started
+## Funktioner
 
-This project is a starting point for a Flutter application.
+- Realtidsfeedback baseret på puls
+- Integration med Movesense-sensor via Bluetooth
+- GPS-tracking og distanceberegning
+- Lagring af data i lokal database (Sembast)
+- Eksport af træningsdata som JSON-fil
 
-A few resources to get you started if this is your first Flutter project:
+## Teknologier
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-## Integrating Android MDS ##
-
-Download the latest MDS library (libmds-xx.yy.zz-release.aar) for Android from [Movesense Mobile Lib repository](https://bitbucket.org/movesense/movesense-mobile-lib/src/master/android/Movesense/), and copy it into example/android/libs folder.
-
+- Flutter 3.38.7
+- Dart 3.10.7
+- Sembast
+- BLE (Bluetooth Low Energy)
+- MVVM-arkitektur
