@@ -12,9 +12,12 @@ Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på l�
 - Lokal lagring af træningsdata
 - Eksport af pulsdata som JSON til efterfølgende analyse
 - Historik over tidligere løbeture
-<img width="590" height="1278" alt="IMG_0481" src="https://github.com/user-attachments/assets/44b45f8d-88b2-4fd1-a737-6594c612a555" />
-<img width="590" height="1278" alt="IMG_0480" src="https://github.com/user-attachments/assets/9ce96ee9-57b0-4620-9caa-569064af28a3" />
-<img width="590" height="1278" alt="IMG_0479" src="https://github.com/user-attachments/assets/7b4932a3-4d55-47e9-bb5f-823f6ea810a0" />
+
+  <img width="590" height="1278" alt="IMG_0479" src="https://github.com/user-attachments/assets/8e2421fb-79ca-4409-81ab-3bb2e8edee2f" />
+  
+<img width="590" height="1278" alt="IMG_0480" src="https://github.com/user-attachments/assets/27cd62be-2c7c-43b9-ace0-f94ac0522df5" />
+
+<img width="590" height="1278" alt="IMG_0481" src="https://github.com/user-attachments/assets/b150d75f-e029-4988-a5f3-1fc287918a3c" />
 
 ---
 ## Installation
