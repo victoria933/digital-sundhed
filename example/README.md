@@ -6,8 +6,8 @@ Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på l�
 
 ## Funktionalitet
 - Forbindelse til Movesense pulssensor via Bluetooth Low Energy (BLE)
-- Realtidsvisning af puls og pulszoner
 - Valg af ønsket pulszone før løb
+- Realtidsvisning af puls, distance, tid og pulszone
 - Feedback når brugeren bevæger sig ind og ud af den valgte zone
 - Lokal lagring af træningsdata
 - Eksport af pulsdata som JSON til efterfølgende analyse
@@ -23,9 +23,11 @@ Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på l�
    flutter run
 
    ## Brug
-- Tryk "Start run" for at begynde tracking
-- Appen giver feedback baseret på puls
-- Tryk "Stop run" for at se historik
+1. Indtaste alder
+2. Forbind til sensor
+1. Tryk "Start run" for at begynde løb
+2. Appen giver feedback baseret på puls
+3. Tryk "Stop run" for at se historik
 
 ## Arkitektur – MVVM
 
@@ -46,8 +48,12 @@ ViewModel-laget fungerer som bindeled mellem view og model. Det er her, funktion
 aliteten ligger: ViewModel tager imod brugerens input fra view-laget, benytter data fra model-laget og sender derefter de korrekte og opdaterede data tilbage til view-laget
 
 ---
+## Begrænsninger
+- Kun testet på iOS og macOS
+- Android ikke understøttet
+- Kræver Movesense sensor
 
-## database 
+## Database 
 Appen anvender **Sembast** som lokal database til lagring af træningsdata.
 Alle puls-målinger gemmes med tidsstempel og kan efterfølgende eksporteres som JSON.
 
