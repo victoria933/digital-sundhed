@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'view/home_view.dart';
 import 'view/start_run_view.dart';
 import 'view/history_view.dart';
-import 'view/sensor_view.dart'; 
+import 'view/sensor_view.dart';
 import 'view/feedback_view.dart';
-
 
 void main() {
   runApp(const ZoneLoebApp());
@@ -26,27 +25,23 @@ class ZoneLoebApp extends StatelessWidget {
       initialRoute: '/',
 
       routes: {
-        '/': (context) =>  HomeView(),
+        '/': (context) => HomeView(),
         '/start-run': (context) => const StartRunView(),
-        '/history': (context) =>  HistoryView(),
-        '/sensor': (context) => const SensorView(), 
+        '/history': (context) => HistoryView(),
+        '/sensor': (context) => const SensorView(),
+        '/feedback': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          final selectedZone = args['selectedZone'] as int;
+          final sensorUuid = args['sensorUuid'] as String;
+          final age = args['age'] as int; // hent alder
 
-'/feedback': (context) {
-  final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-  final selectedZone = args['selectedZone'] as int;
-  final sensorUuid = args['sensorUuid'] as String;
-  final age = args['age'] as int; // hent alder
-
-  return FeedbackView(
-    selectedZone: selectedZone,
-    sensorUuid: sensorUuid,
-    age: age, // nu matcher konstruktøren
-  );
-},
-
-
-
-
+          return FeedbackView(
+            selectedZone: selectedZone,
+            sensorUuid: sensorUuid,
+            age: age, // nu matcher konstruktøren
+          );
+        },
       },
     );
   }
