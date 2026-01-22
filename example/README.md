@@ -16,4 +16,4 @@ ZoneLøb er en mobilapplikation udviklet i Flutter, der hjælper løbere med at 
 - Dart 3.10.7
 - Sembast
 - BLE (Bluetooth Low Energy)
-- Appen er bygget efter [MVVM]
+- Appen er bygget efter [MVVM](https://en.wikipedia.org/wiki/Model–view–viewmodel)-arkitekturen
