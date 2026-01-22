@@ -47,7 +47,16 @@ aliteten ligger: ViewModel tager imod brugerens input fra view-laget, benytter d
 
 ---
 
-## Datapersistens
+## database 
 Appen anvender **Sembast** som lokal database til lagring af træningsdata.
 Alle puls-målinger gemmes med tidsstempel og kan efterfølgende eksporteres som JSON.
+
+## Implementering
+- Flutter 3.38.7
+- Dart 3.10.7
+- Bluetooth Low Energy (BLE)
+- Movesense-pulssensor
+- Sembast (lokal database)
+- Python (dataanalyse og visualisering)
+
 
