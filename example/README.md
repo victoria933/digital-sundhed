@@ -14,6 +14,18 @@ Zoneløb er en løbeapp som er udviklet i Flutter og Dart. Her er fokuset på l�
 - Historik over tidligere løbeture
 
 ---
+## Installation
+1. Klon repository:
+   git clone https://github.com/brugernavn/projekt.git
+2. Kør:
+   flutter pub get
+3. Start appen:
+   flutter run
+
+   ## Brug
+- Tryk "Start run" for at begynde tracking
+- Appen giver feedback baseret på puls
+- Tryk "Stop run" for at se historik
 
 ## Arkitektur – MVVM
 
