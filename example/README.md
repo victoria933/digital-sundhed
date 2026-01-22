@@ -1,6 +1,7 @@
 # ZoneLøb App
 
 ZoneLøb er en mobilapplikation udviklet i Flutter, der hjælper løbere med at holde sig inden for en valgt pulszone under træning.
+OPgaven ligger under example, lib 
 
 ## Funktioner
 
